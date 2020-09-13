@@ -9,18 +9,21 @@ GPIO.setmode(GPIO.BCM)
 LED=17
 
 class LedDriver(object):
-    def __init__(self):
+    def __init__(self, leds):
         self.leds=[]
-        self.init_standard_pinout()
+        self.init_standard_pinout(leds)
 
-    def init_standard_pinout(self):
+    def init_standard_pinout(self, leds):
         GPIO.setmode(GPIO.BCM)
-        self.leds = [
-            17,
-            27,
-            22,
-            5
-        ]
+        if leds:
+            self.leds = leds
+        else:
+            self.leds = [
+                17,
+                27,
+                22,
+                5
+            ]
         for pin in self.leds:
             GPIO.setup(pin, GPIO.OUT)
 
