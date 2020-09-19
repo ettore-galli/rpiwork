@@ -2,11 +2,8 @@
 
 const requests = function (w){ 
 
-    w.setSwitchPattern = function (pattern){
-        axios.post('/pattern/', {
-            firstName: 'Fred',
-            lastName: 'Flintstone'
-          })
+    w.performSetSwitchPatternRequest = function (pattern){
+        axios.post('/pattern/', pattern)
           .then(function (response) {
             console.log(response);
           })

@@ -17,7 +17,12 @@ curl http://localhost:5000/pattern/ -X POST -H "Content-Type: application/json" 
         return render_template("index.html")
 
     def post(self):
-        pattern = [int(t) for t in request.json["pattern"]]
-        duration = request.json["duration"]
+        pattern = self.__prepare_led_pattern(request.json["pattern"])
         current_app.led_driver.output_pattern(*pattern) 
         return request.json
+
+    def __prepare_led_pattern(self, json_pattern):
+        return [v for s, v in sorted(json_pattern.items())]
+
+        
+    
