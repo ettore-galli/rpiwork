@@ -8,6 +8,8 @@ def create_app():
     map_views(app)
     app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
     app.static_folder='static'
+    app.host='0.0.0.0'
+    app.port='5000'
     app.led_driver = LedDriver(None)     
  
     return app
