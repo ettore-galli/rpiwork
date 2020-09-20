@@ -1,6 +1,3 @@
-# Write your code here :-)
-
-
 import RPi.GPIO as GPIO
 import time
 import math
@@ -29,9 +26,13 @@ class SwitchDriver(object):
         pud = GPIO.PUD_UP if status else GPIO.PUD_DOWN
         GPIO.setup(pin, GPIO.IN, pud)
 
-    def output_pattern(self, *args):
-        for (led, out) in zip(self.switches, args):
-            self.set_status_via_pud(led, out)
+    def set_output_pattern(self, *args):
+        for (switch, out) in zip(self.switches, args):
+            self.set_status_via_pud(switch, out)
 
+    def get_output_pattern(self):
+        return [GPIO.input(switch) for (switch) in self.switches]
+             
+            
     def cleanup(self):
         GPIO.cleanup()
