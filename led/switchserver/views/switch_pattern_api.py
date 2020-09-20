@@ -1,7 +1,7 @@
 from flask import request, session, current_app, render_template
 from flask.views import MethodView
 
-class LedPatternApi(MethodView):
+class SwitchPatternApi(MethodView):
 
     def get(self):
         return """
@@ -13,8 +13,6 @@ curl http://localhost:5000/pattern/ -X POST -H "Content-Type: application/json" 
 
 
 """
-    def get(self):
-        return render_template("index.html")
 
     def post(self):
         pattern = self.__prepare_led_pattern(request.json["pattern"])

@@ -1,5 +1,5 @@
 from flask import Flask, request, session
-from views.led_pattern_api import LedPatternApi
+from views.switch_pattern_api import SwitchPatternApi
 from views.ui import Ui
 from multiswitch.multiswitch_driver import SwitchDriver
 
@@ -28,7 +28,7 @@ def create_app():
     return app
 
 def map_views(app):
-    app.add_url_rule('/pattern/', view_func=LedPatternApi.as_view('pattern'))
+    app.add_url_rule('/pattern/', view_func=SwitchPatternApi.as_view('pattern'))
     app.add_url_rule('/', view_func=Ui.as_view('ui'))
 
 app = create_app()
