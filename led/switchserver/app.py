@@ -1,7 +1,7 @@
 from flask import Flask, request, session
 from views.led_pattern_api import LedPatternApi
 from views.ui import Ui
-from multiled.multiled_driver import LedDriver
+from multiswitch.multiswitch_driver import SwitchDriver
 
 def get_application_config():
     # TODO: Load from external configuration
@@ -23,7 +23,7 @@ def create_app():
         setattr(app, attr, value)
 
     app.port=80 
-    app.led_driver = LedDriver(None)     
+    app.switch_driver = SwitchDriver(None)     
  
     return app
 
