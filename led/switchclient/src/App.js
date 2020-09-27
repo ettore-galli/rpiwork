@@ -1,9 +1,13 @@
 import React from 'react';
 import './App.css';
 import Switch from './components/switch/Switch';
+import { initSwitches } from "./redux/actions";
+import { connect } from "react-redux";
 
+function App(props) {
+  props.initSwitches();
+   
 
-function App() {
   return (
     <div className="App">
       <header className="App-header">
@@ -14,4 +18,7 @@ function App() {
   );
 }
 
-export default App;
+export default connect(
+  null,
+  { initSwitches }
+)(App);
