@@ -7,7 +7,7 @@ class Switch extends React.Component {
     render() {
         return (
             <div className="Led">
-                <label>{this.props.switches[this.props.switchId]}</label>
+                <label>{this.props.label}</label>
                 <input
                     type="checkbox"
                     checked={this.props.switches[this.props.switchId]}

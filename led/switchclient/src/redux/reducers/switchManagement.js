@@ -5,7 +5,7 @@ const initialState = {
 };
 
 function initSwitches() {
-    return { s0: false, s1: false };
+    return { s0: false, s1: false, s2: false, s3: false };
 }
 
 function setSwitch(switches, switchId, switchStatus) {

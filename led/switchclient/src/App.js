@@ -6,19 +6,23 @@ import { connect } from "react-redux";
 
 function App(props) {
   props.initSwitches();
-   
-
+  const switches = Object.keys(props.switches).map(
+    switchId => {return <Switch key={switchId} label={switchId} switchId={switchId}></Switch>}
+  );
   return (
     <div className="App">
       <header className="App-header">
-        <Switch label="s0" switchId="s0"></Switch>
-        <Switch label="s1" switchId="s1"></Switch>
+        {switches}
       </header>
     </div>
   );
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return { ...ownProps, switches: state.switchManagement.switchStatus };
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   { initSwitches }
 )(App);
