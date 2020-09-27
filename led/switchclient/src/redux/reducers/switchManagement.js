@@ -10,12 +10,10 @@ function initSwitches() {
 
 function setSwitch(switches, switchId, switchStatus) {
     return { ...switches, [switchId]: switchStatus }
-    //switches.map((el, id) => { if (id === switchId) { return switchStatus; } else { return el; } });
 }
 
 function toggleSwitch(switches, switchId) {
     return { ...switches, [switchId]: !switches[switchId] }
-    //return switches.map((el, id) => { if (id === switchId) { return !el; } else { return el; } });
 }
 
 export default function (state = initialState, action) {
