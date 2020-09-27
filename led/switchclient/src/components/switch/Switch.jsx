@@ -4,19 +4,14 @@ import { setSwitch, toggleSwitch } from "../../redux/actions";
 
 class Switch extends React.Component {
 
-    toggleSwitchStatus(event) {
-        console.log(event);
-        this.toggleSwitch(this.props.switchId); // TODO: Actual switch id
-    }
-
     render() {
         return (
             <div className="Led">
-                <label>{this.props.label}</label>
+                <label>{this.props.switches[this.props.switchId]?"ON":"OFF"}</label>
                 <input
                     type="checkbox"
-                    checked={this.props.switches[this.props.switchId]} //TODO: Actual id
-                    onChange={this.changeSwitchStatus}
+                    checked={this.props.switches[this.props.switchId]}
+                    onChange={() => {this.props.toggleSwitch(this.props.switchId);}}
                 />
             </div>
         );
@@ -24,7 +19,6 @@ class Switch extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    console.log("mapStateToProps", { switches: state.switchManagement.switchStatus });
     return { ...ownProps, switches: state.switchManagement.switchStatus };
 }
 

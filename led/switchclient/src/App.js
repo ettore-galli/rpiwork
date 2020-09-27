@@ -7,7 +7,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Switch label="s1" checked="true"></Switch>
+        <Switch label="s1" switchId="0"></Switch>
+        <Switch label="s1" switchId="1"></Switch>
       </header>
     </div>
   );

@@ -14,14 +14,17 @@ function toggleSwitch(switches, switchId) {
 }
 
 export default function (state = initialState, action) {
+    console.log("switch management", action);
     switch (action.type) {
         case SET_SWITCH_STATUS: {
+            console.log(SET_SWITCH_STATUS);
             return {
                 ...state,
                 switchStatus: setSwitch(state.switchStatus, action.payload.switchId, action.payload.switchStatus)
             }
         }
         case TOGGLE_SWITCH_STATUS: {
+            console.log(TOGGLE_SWITCH_STATUS);
             return {
                 ...state,
                 switchStatus: toggleSwitch(state.switchStatus, action.payload.switchIdß)
