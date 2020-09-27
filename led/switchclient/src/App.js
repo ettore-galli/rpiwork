@@ -11,8 +11,8 @@ function App(props) {
   return (
     <div className="App">
       <header className="App-header">
-        <Switch label="s1" switchId="0"></Switch>
-        <Switch label="s1" switchId="1"></Switch>
+        <Switch label="s0" switchId="s0"></Switch>
+        <Switch label="s1" switchId="s1"></Switch>
       </header>
     </div>
   );
