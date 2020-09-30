@@ -2,17 +2,29 @@ import { INIT_SWITCHES, SET_SWITCH_STATUS, TOGGLE_SWITCH_STATUS } from "./action
 
 
 
-export const initSwitches = () => ({
-    type: INIT_SWITCHES,
-    payload: {}
-});
+export const initSwitches = () => (
+    dispatch => {
+        dispatch({
+            type: INIT_SWITCHES,
+            payload: {}
+        })
+    }
+);
 
-export const setSwitch = (switchId, switchStatus) => ({
-    type: SET_SWITCH_STATUS,
-    payload: { switchId, switchStatus }
-});
+export const setSwitch = (switchId, switchStatus) => (
+    dispatch => {
+        dispatch({
+            type: SET_SWITCH_STATUS,
+            payload: { switchId, switchStatus }
+        })
+    }
+);
 
-export const toggleSwitch = (switchId) => ({
-    type: TOGGLE_SWITCH_STATUS,
-    payload: { switchId }
-});
+export const toggleSwitch = (switchId) => (
+    dispatch => {
+        dispatch({
+            type: TOGGLE_SWITCH_STATUS,
+            payload: { switchId }
+        })
+    }
+);
