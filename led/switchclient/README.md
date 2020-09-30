@@ -74,5 +74,7 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 npm install --save react-redux
 npm install --save redux
 npm install --save redux-thunk
+
+npm install --save-dev redux-mock-store
 ``` 
 

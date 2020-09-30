@@ -1,7 +1,5 @@
 import { INIT_SWITCHES, SET_SWITCH_STATUS, TOGGLE_SWITCH_STATUS } from "./actionTypes";
 
-
-
 export const initSwitches = () => (
     dispatch => {
         dispatch({
