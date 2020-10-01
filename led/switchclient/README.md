@@ -78,3 +78,7 @@ npm install --save redux-thunk
 npm install --save-dev redux-mock-store
 ``` 
 
+### Useful links
+https://www.pluralsight.com/guides/how-to-handle-ajax-with-react
+https://github.com/reduxjs/redux-mock-store
+https://codesandbox.io/s/9on71rvnyo?file=/src/components/Todo.js
