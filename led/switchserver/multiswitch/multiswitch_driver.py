@@ -20,19 +20,14 @@ class SwitchDriver(object):
                 5
             ]
         for pin in self.switches:
-            GPIO.setup(pin, GPIO.IN, GPIO.PUD_DOWN)
+            GPIO.setup(pin, GPIO.OUT)
 
-    def set_status_via_pud(self, pin, status):
-        pud = GPIO.PUD_UP if status else GPIO.PUD_DOWN
-        GPIO.setup(pin, GPIO.IN, pud)
+    def set_status(self, pin, status):
+        GPIO.output(pin, status)
 
     def set_output_pattern(self, *args):
         for (switch, out) in zip(self.switches, args):
-            self.set_status_via_pud(switch, out)
-
-    def get_output_pattern(self):
-        return [GPIO.input(switch) for (switch) in self.switches]
-             
+            self.set_status(switch, out)
             
     def cleanup(self):
         GPIO.cleanup()

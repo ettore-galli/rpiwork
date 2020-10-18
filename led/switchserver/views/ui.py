@@ -12,6 +12,4 @@ class Ui(MethodView):
 
     def __prepare_index_page(self):
         response = render_template("index.html")
-        # response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-        # response.headers['Cache-Control'] = 'public, max-age=0'
         return response
