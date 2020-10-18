@@ -7,7 +7,9 @@ class SwitchPatternApi(MethodView):
          return {}
         
     def post(self):
+        input_pattern = request.json["pattern"]
         pattern = self.__prepare_led_pattern(request.json["pattern"])
+        print(input_pattern)
         current_app.switch_driver.set_output_pattern(*pattern) 
         return request.json
 

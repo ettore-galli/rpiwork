@@ -18,5 +18,8 @@ class StatusManager(object):
         self.__check_key(key)
         return self._status.get(key)      
 
+    def set_whole_status(self):
+        return self._status
+    
     def get_whole_status(self):
-        return [(key, val) for key, val in self._status.items()]        
+        return self._status        

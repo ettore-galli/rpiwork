@@ -28,15 +28,15 @@ def create_app():
     app.port = 80
     app.switch_driver = SwitchDriver(None)
     app.status_manager = StatusManager(
-        switch_list_to_status(
+        prepare_switch_status(
             app.switch_driver.get_switches()
         )
     )
     return app
 
 
-def switch_list_to_status(switch_list):
-    return {s: 0 for s in switch_list}
+def prepare_switch_status(switch_list):
+    return {f"s{str(i+1)}": 0 for i in range(len(switch_list))}
 
 
 def map_views(app):
