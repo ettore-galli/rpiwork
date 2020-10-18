@@ -31,3 +31,6 @@ class SwitchDriver(object):
             
     def cleanup(self):
         GPIO.cleanup()
+
+    def get_switches():
+        return self.switches

@@ -2,6 +2,7 @@ from flask import Flask, request, session
 from views.switch_pattern_api import SwitchPatternApi
 from views.ui import Ui
 from multiswitch.multiswitch_driver import SwitchDriver
+from switchserver.status_manager.status_manager import StatusManager
 
 def get_application_config():
     # TODO: Load from external configuration
@@ -24,7 +25,7 @@ def create_app():
 
     app.port=80 
     app.switch_driver = SwitchDriver(None)     
- 
+    app.status_manager = StatusManager(app.switch_driver.get_switches())  
     return app
 
 def map_views(app):
