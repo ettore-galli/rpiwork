@@ -36,7 +36,7 @@ def create_app():
 
 
 def prepare_switch_status(switch_list):
-    return {f"s{str(i+1)}": 0 for i in range(len(switch_list))}
+    return [(f"s{str(i+1)}", 0) for i in range(len(switch_list))]
 
 
 def map_views(app):
