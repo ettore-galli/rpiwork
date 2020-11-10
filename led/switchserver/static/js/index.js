@@ -2,7 +2,7 @@
 
 const page = function (w, r){
     // Global references
-    const SWITCH_IDS=["s1", "s2", "s3", "s4"];
+    const SWITCH_IDS=["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"];
 
     w.getSwitchSetting = function (switchId){
         return document.getElementById(switchId).checked;

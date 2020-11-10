@@ -13,12 +13,8 @@ class SwitchDriver(object):
         if switches:
             self.switches = switches
         else:
-            self.switches = [
-                17,
-                27,
-                22,
-                5
-            ]
+            self.switches = [17, 27, 22, 5]
+            self.switches = [4, 27, 22, 5, 6, 26, 23, 13, 19, 12]
         for pin in self.switches:
             GPIO.setup(pin, GPIO.OUT)
 
