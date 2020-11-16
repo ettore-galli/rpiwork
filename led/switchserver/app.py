@@ -1,7 +1,10 @@
 from flask import Flask, request, session
 from views.switch_pattern_api import SwitchPatternApi
 from views.ui import Ui
-from multiswitch.multiswitch_driver import SwitchDriver
+try:    
+    from multiswitch.multiswitch_driver import SwitchDriver
+except:
+    from multiswitch.multiswitch_driver_mock import SwitchDriverMock as SwitchDriver
 from switchserver.status_manager.status_manager import StatusManager
 
 
