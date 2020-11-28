@@ -19,7 +19,7 @@ class StatusManager(object):
         return self._status.get(key)
 
     def get_whole_status(self):
-        return [(k, v) for k, v in self._status.items()]
+        return {k: v for k, v in self._status.items()}
 
     def set_whole_status(self, status):
         for key, val in status:
