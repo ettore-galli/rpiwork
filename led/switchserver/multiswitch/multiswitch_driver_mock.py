@@ -12,7 +12,7 @@ class SwitchDriverMock(SwitchDriverBase):
         if switches:
             self.switches = switches
         else:
-            self.switches = [1, 2, 3, 4, 5]
+            self.switches = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
     def set_output_pattern(self, *args):
         for (switch, out) in zip(self.switches, args):
