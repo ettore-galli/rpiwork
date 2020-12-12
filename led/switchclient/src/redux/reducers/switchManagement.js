@@ -4,8 +4,8 @@ const initialState = {
     switchStatus: {}
 };
 
-function initSwitches() {
-    return { s0: false, s1: false, s2: false, s3: false };
+function initSwitches(switches) {
+    return switches; // { s0: false, s1: false, s2: false, s3: false };
 }
 
 function setSwitch(switches, switchId, switchStatus) {
@@ -19,7 +19,7 @@ function toggleSwitch(switches, switchId) {
 export default function (state = initialState, action) {
     switch (action.type) {
         case INIT_SWITCHES: {
-            const switchStatus = Object.keys(state.switchStatus).length > 0 ? state.switchStatus : initSwitches();
+            const switchStatus = Object.keys(state.switchStatus).length > 0 ? state.switchStatus : initSwitches(action.payload);
             return {
                 ...state,
                 switchStatus
