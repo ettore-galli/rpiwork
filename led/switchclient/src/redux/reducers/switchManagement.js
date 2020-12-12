@@ -12,9 +12,9 @@ function setSwitch(switches, switchId, switchStatus) {
     return { ...switches, [switchId]: switchStatus }
 }
 
-function toggleSwitch(switches, switchId) {
-    return { ...switches, [switchId]: !switches[switchId] }
-}
+// function toggleSwitch(switches, switchId) {
+//     return { ...switches, [switchId]: !switches[switchId] }
+// }
 
 export default function (state = initialState, action) {
     switch (action.type) {
@@ -31,12 +31,12 @@ export default function (state = initialState, action) {
                 switchStatus: setSwitch(state.switchStatus, action.payload.switchId, action.payload.switchStatus)
             }
         }
-        case TOGGLE_SWITCH_STATUS: {
-            return {
-                ...state,
-                switchStatus: toggleSwitch(state.switchStatus, action.payload.switchId)
-            }
-        }
+        // case TOGGLE_SWITCH_STATUS: {
+        //     return {
+        //         ...state,
+        //         switchStatus: toggleSwitch(state.switchStatus, action.payload.switchId)
+        //     }
+        // }
         default: {
             return state;
         }

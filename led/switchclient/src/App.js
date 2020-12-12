@@ -7,7 +7,14 @@ import { connect } from "react-redux";
 function App(props) {
   props.initSwitches();
   const switches = Object.keys(props.switches).map(
-    switchId => {return <Switch key={switchId} label={switchId} switchId={switchId}></Switch>}
+    switchId => {
+      return <Switch
+        key={switchId}
+        label={switchId}
+        switchId={switchId}
+        >
+      </Switch>
+    }
   );
   return (
     <div className="App">

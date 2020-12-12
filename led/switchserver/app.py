@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from views.switch_pattern_api import SwitchPatternApi
 from views.ui import Ui
 try:
@@ -21,6 +22,7 @@ def get_application_config():
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     map_views(app)
 
     cfg = get_application_config()
@@ -51,15 +53,15 @@ def map_views(app):
 
 app = create_app()
 
-
-@app.after_request
-def add_header(r):
-    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
-    r.headers['Cache-Control'] = 'public, max-age=0'
-    r.headers['Access-Control-Allow-Origin'] = '*'
-    return r
+# TODO: Consider removing
+# @app.after_request
+# def add_header(r):
+#     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+#     r.headers["Pragma"] = "no-cache"
+#     r.headers["Expires"] = "0"
+#     r.headers['Cache-Control'] = 'public, max-age=0'
+#     r.headers['Access-Control-Allow-Origin'] = '*'
+#     return r
 
 
 if __name__ == "__main__":
