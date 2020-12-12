@@ -16,7 +16,7 @@ class SwitchPatternApi(MethodView):
             current_app.status_manager.get_whole_status()
         )
         current_app.switch_driver.set_output_pattern(*pattern)
-        return request.json
+        return current_app.status_manager.get_whole_status()
 
     def __prepare_status(self, json_pattern):
         return [(s, v) for s, v in sorted(json_pattern.items())]

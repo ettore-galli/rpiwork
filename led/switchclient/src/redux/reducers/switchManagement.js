@@ -1,20 +1,16 @@
-import { INIT_SWITCHES, SET_SWITCH_STATUS, TOGGLE_SWITCH_STATUS } from "../actionTypes";
+import { INIT_SWITCHES, SET_SWITCH_STATUS } from "../actionTypes";
 
 const initialState = {
     switchStatus: {}
 };
 
 function initSwitches(switches) {
-    return switches; // { s0: false, s1: false, s2: false, s3: false };
+    return switches;
 }
 
-function setSwitch(switches, switchId, switchStatus) {
-    return { ...switches, [switchId]: switchStatus }
+function setSwitchStatus(switchStatus) {
+    return { ...switchStatus}
 }
-
-// function toggleSwitch(switches, switchId) {
-//     return { ...switches, [switchId]: !switches[switchId] }
-// }
 
 export default function (state = initialState, action) {
     switch (action.type) {
@@ -26,17 +22,13 @@ export default function (state = initialState, action) {
             }
         }
         case SET_SWITCH_STATUS: {
+            console.log("SET_SWITCH_STATUS")
+            console.log(state.switchStatus, action.payload, action.payload.switchStatus)
             return {
                 ...state,
-                switchStatus: setSwitch(state.switchStatus, action.payload.switchId, action.payload.switchStatus)
+                switchStatus: setSwitchStatus(action.payload)
             }
         }
-        // case TOGGLE_SWITCH_STATUS: {
-        //     return {
-        //         ...state,
-        //         switchStatus: toggleSwitch(state.switchStatus, action.payload.switchId)
-        //     }
-        // }
         default: {
             return state;
         }

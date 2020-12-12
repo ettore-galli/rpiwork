@@ -53,7 +53,6 @@ def map_views(app):
 
 app = create_app()
 
-# TODO: Consider removing
 # @app.after_request
 # def add_header(r):
 #     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"

@@ -4,7 +4,12 @@ import { SWITCH_SERVER_PATTERN_URL } from "../config/endpoint";
 
 export const initSwitches = () => (
     dispatch => {
-        fetch(SWITCH_SERVER_PATTERN_URL, { mode: 'cors' })
+        fetch(SWITCH_SERVER_PATTERN_URL,
+            {
+                mode: 'cors',
+                credentials: 'same-origin'
+            }
+        )
             .then(response => response.json())
             .then(data => {
                 console.log("Executing then after fetch GET")
@@ -49,16 +54,17 @@ export const toggleSwitch = (switchId, switches) => (
                 }),
                 body: toggle_request
             }
-        ).then(
-            data => {
-                console.log("Executing then after fetch POST", data)
-            }
         )
-
-
-        // dispatch({
-        //     type: SET_SWITCH_STATUS,
-        //     payload: { switchId, switchStatus: switches }
-        // })
+            .then(response => response.json())
+            .then(
+                data => {
+                    console.log("Executing then after fetch POST")
+                    console.log(data)
+                    dispatch({
+                        type: SET_SWITCH_STATUS,
+                        payload: data
+                    })
+                }
+            )
     }
 );
