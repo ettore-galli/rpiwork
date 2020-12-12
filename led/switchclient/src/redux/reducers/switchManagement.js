@@ -22,8 +22,6 @@ export default function (state = initialState, action) {
             }
         }
         case SET_SWITCH_STATUS: {
-            console.log("SET_SWITCH_STATUS")
-            console.log(state.switchStatus, action.payload, action.payload.switchStatus)
             return {
                 ...state,
                 switchStatus: setSwitchStatus(action.payload)

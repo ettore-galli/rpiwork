@@ -11,7 +11,7 @@ class Switch extends React.Component {
                 <input
                     type="checkbox"
                     checked={this.props.switches[this.props.switchId]}
-                    onChange={() => {
+                    onChange={(e) => {
                         this.props.toggleSwitch(this.props.switchId, this.props.switches);
                     }}
                 />

@@ -13,8 +13,6 @@ export const initSwitches = () => (
         )
             .then(response => response.json())
             .then(data => {
-                console.log("Executing then after fetch GET")
-                console.log(data)
                 dispatch({
                     type: INIT_SWITCHES,
                     payload: data
@@ -33,8 +31,9 @@ export const toggleSwitch = (switchId, switches) => (
                 [switchId]: !switches[switchId]
             }
         };
+
         const toggle_request = JSON.stringify(toggle_request_body);
-        console.log(toggle_request)
+        
         fetch(
             SWITCH_SERVER_PATTERN_URL,
             {
@@ -50,8 +49,6 @@ export const toggleSwitch = (switchId, switches) => (
             .then(response => response.json())
             .then(
                 data => {
-                    console.log("Executing then after fetch POST")
-                    console.log(data)
                     dispatch({
                         type: SET_SWITCH_STATUS,
                         payload: data
