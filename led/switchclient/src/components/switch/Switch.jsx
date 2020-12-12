@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { toggleSwitch } from "../../redux/actions";
+import { setSwitchStatus } from "../../redux/actions";
 
 class Switch extends React.Component {
 
@@ -12,7 +12,12 @@ class Switch extends React.Component {
                     type="checkbox"
                     checked={this.props.switches[this.props.switchId]}
                     onChange={(e) => {
-                        this.props.toggleSwitch(this.props.switchId, this.props.switches);
+
+                        this.props.setSwitchStatus(
+                            this.props.switchId,
+                            e.target.checked,
+                            this.props.switches
+                        );
                     }}
                 />
             </div>
@@ -26,5 +31,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
     mapStateToProps,
-    { toggleSwitch }
+    { setSwitchStatus }
 )(Switch);

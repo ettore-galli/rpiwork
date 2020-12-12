@@ -22,13 +22,13 @@ export const initSwitches = () => (
     }
 );
 
-export const toggleSwitch = (switchId, switches) => (
+export const setSwitchStatus = (switchId, statusValue, switches) => (
     dispatch => {
 
         const toggle_request_body = {
             pattern: {
                 ...switches,
-                [switchId]: !switches[switchId]
+                [switchId]: statusValue
             }
         };
 
@@ -57,3 +57,6 @@ export const toggleSwitch = (switchId, switches) => (
             )
     }
 );
+
+
+ 
