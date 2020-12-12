@@ -1,10 +1,11 @@
-import { INIT_SWITCHES, SET_SWITCH_STATUS, TOGGLE_SWITCH_STATUS } from "./actionTypes";
+import { INIT_SWITCHES, SET_SWITCH_STATUS } from "./actionTypes";
 import { SWITCH_SERVER_PATTERN_URL } from "../config/endpoint";
 
 
 export const initSwitches = () => (
     dispatch => {
-        fetch(SWITCH_SERVER_PATTERN_URL,
+        fetch(
+            SWITCH_SERVER_PATTERN_URL,
             {
                 mode: 'cors',
                 credentials: 'same-origin'
@@ -23,16 +24,6 @@ export const initSwitches = () => (
     }
 );
 
-export const setSwitch = (switchId, switchStatus) => (
-    dispatch => {
-        throw "Action setSwitch is not implemented and should not be. Consider removing";
-        dispatch({
-            type: SET_SWITCH_STATUS,
-            payload: { switchId, switchStatus }
-        })
-    }
-);
-
 export const toggleSwitch = (switchId, switches) => (
     dispatch => {
 
@@ -44,7 +35,8 @@ export const toggleSwitch = (switchId, switches) => (
         };
         const toggle_request = JSON.stringify(toggle_request_body);
         console.log(toggle_request)
-        fetch(SWITCH_SERVER_PATTERN_URL,
+        fetch(
+            SWITCH_SERVER_PATTERN_URL,
             {
                 method: 'POST',
                 mode: 'cors',

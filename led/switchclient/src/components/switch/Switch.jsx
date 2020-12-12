@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { setSwitch, toggleSwitch } from "../../redux/actions";
+import { toggleSwitch } from "../../redux/actions";
 
 class Switch extends React.Component {
 
@@ -24,9 +24,7 @@ const mapStateToProps = (state, ownProps) => {
     return { ...ownProps, switches: state.switchManagement.switchStatus };
 }
 
-
-
 export default connect(
     mapStateToProps,
-    { setSwitch, toggleSwitch }
+    { toggleSwitch }
 )(Switch);
