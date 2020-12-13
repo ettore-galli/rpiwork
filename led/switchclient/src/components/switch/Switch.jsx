@@ -12,7 +12,6 @@ class Switch extends React.Component {
                     type="checkbox"
                     checked={this.props.switches[this.props.switchId]}
                     onChange={(e) => {
-
                         this.props.setSwitchStatus(
                             this.props.switchId,
                             e.target.checked,
