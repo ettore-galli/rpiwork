@@ -1,4 +1,3 @@
-const SWITCH_SERVER_ENDPOINT = "localhost:8080";
-
-export const SWITCH_SERVER_PATTERN_URL = `http://${SWITCH_SERVER_ENDPOINT}/pattern/`;
-
+export const getSwitchPatternURL = () => {
+    return process.env.REACT_APP_SWITCH_SERVER_ENDPOINT;
+}

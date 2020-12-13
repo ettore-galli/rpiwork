@@ -1,11 +1,11 @@
 import { INIT_SWITCHES, SET_SWITCH_STATUS } from "./actionTypes";
-import { SWITCH_SERVER_PATTERN_URL } from "../config/endpoint";
+import { getSwitchPatternURL } from "../config/endpoint";
 
 
 export const initSwitches = () => (
     dispatch => {
         fetch(
-            SWITCH_SERVER_PATTERN_URL,
+            getSwitchPatternURL(),
             {
                 mode: 'cors',
                 credentials: 'same-origin'
@@ -35,7 +35,7 @@ export const setSwitchStatus = (switchId, statusValue, switches) => (
         const toggle_request = JSON.stringify(toggle_request_body);
         
         fetch(
-            SWITCH_SERVER_PATTERN_URL,
+            getSwitchPatternURL(),
             {
                 method: 'POST',
                 mode: 'cors',

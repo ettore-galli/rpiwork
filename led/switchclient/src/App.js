@@ -12,6 +12,7 @@ function getSortedSwitchKeys(keys) {
 
 function App(props) {
 
+
   props.initSwitches();
 
   const switchesKeysInProperOrder = getSortedSwitchKeys(Object.keys(props.switches));
@@ -29,9 +30,12 @@ function App(props) {
 
   return (
     <div className="App">
-      <header className="App-header">
-        {switches}
+      <header>
+        {process.env.REACT_APP_SWITCH_SERVER_ENDPOINT}
       </header>
+      <div className="App-header">
+        {switches}
+      </div>
     </div>
   );
 
