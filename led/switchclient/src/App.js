@@ -3,6 +3,7 @@ import './App.css';
 import Switch from './components/switch/Switch';
 import { initSwitches } from "./redux/actions";
 import { connect } from "react-redux";
+import { getSwitchPatternURL } from "../config/endpoint";
 
 function getSortedSwitchKeys(keys) {
   return keys.sort(
@@ -31,7 +32,7 @@ function App(props) {
   return (
     <div className="App">
       <header>
-        {process.env.REACT_APP_SWITCH_SERVER_ENDPOINT}
+        {getSwitchPatternURL()}
       </header>
       <div className="App-header">
         {switches}
