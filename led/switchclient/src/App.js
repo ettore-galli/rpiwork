@@ -3,7 +3,7 @@ import './App.css';
 import Switch from './components/switch/Switch';
 import { initSwitches } from "./redux/actions";
 import { connect } from "react-redux";
-import { getSwitchPatternURL } from "../config/endpoint";
+import { getSwitchPatternURL } from "./config/endpoint";
 
 function getSortedSwitchKeys(keys) {
   return keys.sort(
