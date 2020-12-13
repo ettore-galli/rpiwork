@@ -1,2 +1,2 @@
-source ./env_mac.sh
+source ./pi_env.sh
 source ./setenv.sh
