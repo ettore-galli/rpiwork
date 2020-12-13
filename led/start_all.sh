@@ -2,6 +2,6 @@
 python switchserver/app.py & 
 
 # Start switch client
-python -m http.server 8001 --directory ./switchclient/build & 
+python -m http.server 8001 --directory ./switchclient/client-site & 
 
 
