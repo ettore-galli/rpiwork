@@ -1,9 +1,3 @@
-
-
-
-
-
-
 const buildWebRepl = (
     inputElementId,
     enterTriggerId,
@@ -33,13 +27,16 @@ const buildWebRepl = (
         return input;
     }
 
+    const linkMainWorkflowToTriggerAction = (eventFunction) => {
+        document.getElementById(enterTriggerId).onclick = eventFunction
+    }
 
     return new Webrepl(
         initStateAction,
+        linkMainWorkflowToTriggerAction,
         getInputFromUserAction,
         processInputFunction,
         calculateStateFromLastResultFunction,
-        updateInterfaceFromStateAction,
-        enterTriggerId
+        updateInterfaceFromStateAction
     )
 }

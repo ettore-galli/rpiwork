@@ -2,11 +2,11 @@ class Webrepl {
 
     constructor(
         initStateAction,
+        linkMainWorkflowToTriggerAction,
         getInputFromUserAction,
         processInputFunction,
         calculateStateFromLastResultFunction,
-        updateInterfaceFromStateAction,
-        enterTriggerId
+        updateInterfaceFromStateAction
     ) {
 
         this.applicationState = initStateAction();
@@ -19,7 +19,7 @@ class Webrepl {
             this.applicationState = { ...state };
         }
 
-        const processInputAction = (inputReader, interfaceWriter) => {
+        const mainProcessInputWorkflowAction = (inputReader, interfaceWriter) => {
             const user_input = inputReader();
             const lastResult = processInputFunction(user_input, getApplicationState());
             setApplicationState(
@@ -28,9 +28,11 @@ class Webrepl {
             interfaceWriter(getApplicationState())
         }
 
-        document.getElementById(enterTriggerId).onclick = () => {
-            processInputAction(getInputFromUserAction, updateInterfaceFromStateAction)
-        }
+        linkMainWorkflowToTriggerAction(
+            () => {
+                mainProcessInputWorkflowAction(getInputFromUserAction, updateInterfaceFromStateAction)
+            }
+        )
 
         console.log("webrepl init completed.")
     }
