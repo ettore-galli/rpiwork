@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function getInputFromUserAction(){
+            return {
+                a : document.getElementById("a").value,
+                b : document.getElementById("b").value
+            }
+        }
+
+        function writeResultToOutputAction(result){
+            document.getElementById("ris").innerText = result;
+        }
+
+        function enterAction(reader, writer){
+            writer(
+                processInputCalculation(
+                    reader()
+                )
+            );
+        }
+        function processInputCalculation(input){
+            return parseFloat(input.a) + parseFloat(input.b);
+        }
+        
+    </script>
+</head>
+<body>
+    <div>
+        <div><input type="text" id="a"></div>
+        <div><input type="text" id="b"></div>
+        <div id="ris"></div>
+        <div><button onclick="enterAction(getInputFromUserAction, writeResultToOutputAction)">enter</button></div>
+    </div>
+</body>
+</html>

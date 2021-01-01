@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./webrepl-core.js"></script>
+    <script src="./webrepl.js"></script>
+</head>
+
+<body>
+    <div>
+        <div id="result-area"></div>
+        <div><input type="text" id="user-input"></div>
+        <div><button id="enter">enter</button></div>
+    </div>
+</body>
+<script>
+    webrepl = buildWebRepl("user-input", "enter", "result-area");
+</script>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+
+        let global_state = { stack: [] };
+
+        function getInputFromUserAction() {
+            return {
+                x: document.getElementById("x").value,
+            }
+        }
+
+        function getCurrentState() {
+            return {...global_state};
+        }
+
+        function saveNewState(state) {
+            global_state = { ...state };
+        }
+
+        function updateInterfaceFromState() {
+            document.getElementById("ris").innerText = getCurrentState().stack;
+        }
+
+        function saveWorkflow(state) {
+            saveNewState(state);
+            updateInterfaceFromState();
+        }
+
+        function processInputAction(reader, writer) {
+            const user_input = reader();
+            writer(
+                processNewState(getCurrentState(), user_input)
+            );
+        }
+
+        function processNewState(current_state, user_input) {
+            return {
+                ...current_state,
+                stack: getCurrentState().stack.concat([user_input.x])
+            };
+        }
+
+    </script>
+</head>
+
+<body>
+    <div>
+        <div id="ris"></div>
+        <div><input type="text" id="x"></div>
+        <div><button id="enter" onclick="processInputAction(getInputFromUserAction, saveWorkflow)">enter</button></div>
+    </div>
+</body>
+
+</html>
