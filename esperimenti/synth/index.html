@@ -5,29 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="./synth.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="./synth-core.js"></script>
     <script src="./synth-ui.js"></script>
 </head>
+<template id="key-template">
+    <div class="keys-grid-element" style="background-color: #cccccc; width: 50px; height: 200px;"></div>
+</template>
 
 <body>
     <div>
 
-        <input type="range" id="volume" min="0" max="2" value="0" step="0.01">
+        vol <input type="range" id="volume" min="0" max="2" value="0" step="0.01">
         <br />
-        <input type="range" id="filter-frequency" min="0" max="5000" value="100" step="1">
+        frq <input type="range" id="filter-frequency" min="0" max="5000" value="100" step="1">
         <br />
-        <input type="range" id="filter-q" min="0" max="10" value="2" step="0.01">
+        f-q <input type="range" id="filter-q" min="0" max="10" value="2" step="0.01">
+        <br />
         <br />
         <input type="range" id="pitch" min="22" max="440" value="1" step="0.01" style="width: 80%">
-
+        <br />
+        <div id="key-area" class="keys-grid-container"></div>
     </div>
 </body>
 <script>
-    
+
     'use strict'
 
-    initSynth();
-    
+    initSynth(window, document);
+
+
+
 </script>
 
 </html>

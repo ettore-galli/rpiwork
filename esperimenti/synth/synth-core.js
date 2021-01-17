@@ -1,14 +1,11 @@
 'use strict';
 
-class AudioPage {
+class WebSynth {
 
     constructor(
-        volumeController,
-        pitchController,
-        filterFrequency,
-        filterQ
+        window
     ) {
-
+        console.log("AudioPage init init...")
         const AudioContext = window.AudioContext || window.webkitAudioContext;
 
         this.audioContext = new AudioContext();
@@ -28,6 +25,7 @@ class AudioPage {
             .connect(this.filter)
             .connect(this.gainNode)
             .connect(this.audioContext.destination);
+        this.oscillator.frequency.value = 0;
         this.oscillator.start(0);
 
         const thisClassContext = this;
@@ -48,6 +46,15 @@ class AudioPage {
             this.gainNode.gain.value = value;
         }
 
+        this.setVolumeWithAttackTime = (volumeValue, attackTime) => {
+            this.resumeIfSuspended();
+            
+            this.gainNode.gain.linearRampToValueAtTime(
+                volumeValue,
+                this.audioContext.currentTime + attackTime
+            );
+        }
+
         this.setFilterFrequency = (value) => {
             this.resumeIfSuspended();
             this.filter.frequency.value = value;
@@ -58,27 +65,28 @@ class AudioPage {
             this.filter.Q.value = value;
         }
 
-        volumeController.addEventListener('input', function () {
-            thisClassContext.setVolume(this.value);
+        this.startNote = (frequency, volume, attackTime) => {
+            this.setFrequency(frequency);
+            this.setVolumeWithAttackTime(volume, attackTime);
         }
+
+        this.releaseNote = () => {
+            this.gainNode.gain.cancelScheduledValues(this.audioContext.currentTime);
+            this.setVolume(0);
+        }
+
+        this.noteMap = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map(
+            (n) => 220 * Math.pow(2, n / 12)
         );
 
-        filterFrequency.addEventListener('input', function () {
-            thisClassContext.setFilterFrequency(this.value);
-        }
-        );
 
-        filterQ.addEventListener('input', function () {
-            thisClassContext.setFilterQ(this.value);
+        this.playNoteNumber = (n, volume) => {
+            const frequency = this.noteMap[n - 1];
+            this.startNote(frequency, parseFloat(volume), 0.1);
         }
-        );
-
-        pitchController.addEventListener('input', function () {
-            thisClassContext.setFrequency(this.value);
-        }
-        );
 
         console.log("AudioPage init completed.")
+
     }
 
 }

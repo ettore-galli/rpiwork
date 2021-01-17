@@ -1,0 +1,8 @@
+.keys-grid-container {
+    padding: 10px;
+}
+.keys-grid-element {
+    float: left;
+    padding: 5px;
+    margin: 5px;
+}
