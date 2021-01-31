@@ -10,22 +10,23 @@
     <script src="./synth-ui.js"></script>
 </head>
 <template id="key-template">
-    <div class="keys-grid-element" style="background-color: #cccccc; width: 50px; height: 200px;"></div>
+    <div class="keys-grid-element" style="background-color: #cccccc; width: 1px; height: 150px;"></div>
 </template>
 
 <body>
     <div>
 
-        vol <input type="range" id="volume" min="0" max="2" value="0" step="0.01">
+        vol <input type="range" id="volume" min="0" max="2" value="0.03" step="0.01">
         <br />
         frq <input type="range" id="filter-frequency" min="0" max="5000" value="100" step="1">
         <br />
         f-q <input type="range" id="filter-q" min="0" max="10" value="2" step="0.01">
         <br />
+        ? <input type="range" id="xxx" min="0" max="12" value="6" step="1">
         <br />
-        <input type="range" id="pitch" min="22" max="440" value="1" step="0.01" style="width: 80%">
-        <br />
-        <div id="key-area" class="keys-grid-container"></div>
+        <div id="key-area-up" class="keys-grid-container"></div>
+        <div id="space" class="keys-spacer"></div>
+        <div id="key-area-down" class="keys-grid-container"></div>
     </div>
 </body>
 <script>
@@ -34,7 +35,9 @@
 
     initSynth(window, document);
 
-
+    // 1030193001811
+    // 103019 3001811
+    // 800 422 422
 
 </script>
 
