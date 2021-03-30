@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./synth.js"></script>
+    <script src="./synth-ui.js"></script>
+</head>
+
+<body>
+    <div>
+
+        volume <input type="range" id="volume" min="0" max="2" value="0" step="0.01">
+        <br />
+        pitch <input type="range" id="pitch" min="22" max="440" value="1" step="0.01" style="width: 80%">
+
+    </div>
+</body>
+<script>
+    
+    'use strict'
+
+    initSynth(window, document);
+    
+</script>
+
+</html>

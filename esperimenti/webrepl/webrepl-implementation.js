@@ -1,7 +1,11 @@
+'use strict';
+
 const buildWebRepl = (
+    
     inputElementId,
     enterTriggerId,
     resultAreaId
+
 ) => {
 
     const initStateAction = () => {
@@ -31,12 +35,16 @@ const buildWebRepl = (
         document.getElementById(enterTriggerId).onclick = eventFunction
     }
 
-    return new Webrepl(
-        initStateAction,
-        linkMainWorkflowToTriggerAction,
-        getInputFromUserAction,
-        processInputFunction,
-        calculateStateFromLastResultFunction,
-        updateInterfaceFromStateAction
-    )
+    if (typeof Webrepl == 'undefined') {
+        console.error("Missing webrepl-core.js component. Must be included in home page.")
+    } else {
+        return new Webrepl(
+            initStateAction,
+            linkMainWorkflowToTriggerAction,
+            getInputFromUserAction,
+            processInputFunction,
+            calculateStateFromLastResultFunction,
+            updateInterfaceFromStateAction
+        )
+    }
 }
