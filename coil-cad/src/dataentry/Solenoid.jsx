@@ -1,7 +1,9 @@
+import '../App.css';
 import React from 'react';
 import Button from '../components/Button';
 import Field from '../components/Field'
 import inductance from '../calc/Solenoid';
+
 class Solenoid extends React.Component {
 
   constructor(props) {
@@ -39,7 +41,7 @@ class Solenoid extends React.Component {
   render() {
 
     return (
-      <div >
+      <div className="App-body">
 
         <Field label="Permeabilità relativa" value={this.state.permeabilita}
           onChange={e => { this.setState({ permeabilita: e.target.value }) }}
@@ -59,7 +61,7 @@ class Solenoid extends React.Component {
           onClick={this.performCalculus}
 
         ></Button>
-        <div>{this.state.induttanza}</div>
+        <div className="App-result">{this.state.induttanza}</div>
 
       </div>
     );
