@@ -21,14 +21,16 @@ export const todoSlice = createSlice({
       state.entries.push(action.payload);
     },
     deleteEntry: (state, action) => {
-      console.log(action)
       state.entries = state.entries.filter(e => e.id !== action.payload.id);
+    },
+    loadEntries: (state, action) => {
+      state.entries =  action.payload;
     }
   },
 
 });
 
-export const { addEntry, deleteEntry } = todoSlice.actions;
+export const { addEntry, deleteEntry, loadEntries } = todoSlice.actions;
 
 export const selectEntries = (state) => state.todo.entries;
 export const selectStatus = (state) => state.todo.status;
