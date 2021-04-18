@@ -30,8 +30,6 @@ export function Todo() {
     </div>
   )
 
-  console.log("entries/render", entries)
-
   return (
     <div>
       {todoEntries}

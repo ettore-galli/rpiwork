@@ -7,7 +7,6 @@ const initialState = {
 
 
 export const createEntry = (entries, text) => {
-  console.log("entries/createentry", entries)
   let id = Math.max(...entries.map(e => e.id), 0) + 1;
   
   return { id, text }
