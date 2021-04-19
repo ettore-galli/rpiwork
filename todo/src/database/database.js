@@ -19,18 +19,29 @@ export function getTodoListDatabase(idb) {
             reject(event.target);
         };
         request.onsuccess = function (event) {
-            let db = event.target.result;
-            resolve(db);
+            resolve(event.target.result);
         };
     })
 }
 
 
 export function bulkInsert(db, records) {
-    let todoObjectStore = db.transaction(["todos"], "readwrite").objectStore("todos");
-    records.forEach((item) => {
-        todoObjectStore.add(item)
-    })
+    return new Promise(
+        (resolve, reject) => {
+            let transaction = db.transaction(["todos"], "readwrite");
+            let todoObjectStore = transaction.objectStore("todos");
+            records.forEach((item) => {
+                todoObjectStore.add(item)
+            })
+            transaction.commit();
+            transaction.oncomplete = (event) => {
+                resolve(event.target.result)
+            }
+            transaction.onerror = (event) => {
+                reject(event.target)
+            }
+        }
+    )
 }
 
 export function retrieveTodoItemByKey(db, key) {
@@ -41,7 +52,7 @@ export function retrieveTodoItemByKey(db, key) {
                 resolve(event.target.result)
             }
             todoObjectStore.onerror = (event) => {
-                reject("No such item")
+                reject(event.target)
             }
         }
     )
