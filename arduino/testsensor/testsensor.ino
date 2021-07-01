@@ -6,7 +6,6 @@ int SOUND_OUT = 14; // D5
 int PULSE_PIN = 4; // D2
 int ECHO_PIN =  5; // D1
 
-int ANALOG_IN = 0;
 int POLL_DELAY_MS = 10;
 
 
@@ -80,7 +79,7 @@ long processCleanupData(unsigned long meas[10]) {
   int nclean = 0;
 
   for (int i = 0; i < DIM; i++) {
-    if (meas[i] <= (avg + 2 * sigma)) {
+    if (meas[i] <= (avg*1.1)) {
       sumclean += meas[i];
       nclean ++;
     }
@@ -92,20 +91,10 @@ long processCleanupData(unsigned long meas[10]) {
 }
 
 
-void prtdata(unsigned long meas[10], double avg, double avgclean) {
-  for (int i = 0; i < 10; i++) {
-    Serial.print(meas[i]);
-    Serial.print(",");
-  }
-  Serial.print(avg);
-  Serial.print(",");
-  Serial.println(avgclean);
-}
+ 
 
 void loop() {
-  //_freq = sensorValueToRegisterFrequency(analogRead(ANALOG_IN));
-  // long t = sense() ;
-  long t = processCleanupData(senseMulti(1)) ;
+  long t = processCleanupData(senseMulti(10)) ;
   Serial.println(t);
-
+  
 }
