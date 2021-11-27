@@ -1,0 +1,14 @@
+.feedbackOn {
+    background-color: blueviolet;
+}
+
+.feedbackOff {
+    background-color: aliceblue;
+}
+
+.feedbackOn,
+.feedbackOff {
+    width: 300px;
+    height: 300px;
+    border: 1px solid black;
+}
