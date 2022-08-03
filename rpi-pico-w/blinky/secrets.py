@@ -1,0 +1,1 @@
+wifi = {"SSID": "aaaaa", "PASSWORD": "bbbbb"}
