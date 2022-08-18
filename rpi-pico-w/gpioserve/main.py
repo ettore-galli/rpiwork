@@ -47,10 +47,9 @@ if __name__ == "__main__":
 
     wlan_connection = get_wlan_connection(run_environment=run_environment)
 
-    # sd = SwitchDriver(["LED", 1], 0.1)
-    # sd.blink_loop(1)
-
-    # logger.info(sample_request())
-
-    asyncio.run(main())
-    asyncio.new_event_loop()
+    try:
+        asyncio.run(main())
+    except Exception as error:
+        run_environment.logger.error(str(error))
+    finally:
+        asyncio.new_event_loop()
