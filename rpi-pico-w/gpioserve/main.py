@@ -8,17 +8,15 @@ from gpiodriver import SwitchDriver
 
 import uasyncio as asyncio
 
+from request_parser import parse_request
+
 
 async def serve(reader, writer):
-    print("Processing request...")
-    b_request = await reader.readline()
-    b_headers = await reader.readline()
-    _ = await reader.readline()
-    b_body = await reader.read(1024)
 
-    request, headers, body = map(str, [b_request, b_headers, b_body])
+    request, headers, body = await parse_request(reader)
 
     print("-" * 50)
+
     for part in [request, headers, body]:
         print(part)
 
