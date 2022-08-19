@@ -18,7 +18,7 @@ def log_request(request, headers_map, body):
         logger.info(part)
 
 
-async def serve(reader, writer):
+async def serve(gpio_controller, reader, writer):
 
     request, headers_map, body = await parse_request(reader)
 
@@ -35,7 +35,10 @@ async def serve(reader, writer):
 async def main():
     gpio_controller = SwitchDriver(["LED", 1])
 
-    asyncio.run(asyncio.start_server(serve, "0.0.0.0", 8765))
+    async def serve_gpios(reader, writer):
+        await serve(gpio_controller, reader, writer)
+
+    asyncio.run(asyncio.start_server(serve_gpios, "0.0.0.0", 8765))
 
     await gpio_controller.heartbeat(gpio="LED", on_time=0.1, ratio=10)
 
