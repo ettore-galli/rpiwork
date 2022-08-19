@@ -22,6 +22,12 @@ def log_request(request, headers_map, body):
 Example requests:
 curl -X POST http://192.168.1.10:8765 -d '{"1":1}'  # Led on
 curl -X POST http://192.168.1.10:8765 -d '{"1":0}'  # Led off
+
+TODO:
+  IP Statico
+  https://forum.micropython.org/viewtopic.php?t=12772&p=69403
+
+
 """
 
 async def serve(gpio_controller, reader, writer):
@@ -52,9 +58,9 @@ async def main():
     async def serve_gpios(reader, writer):
         await serve(gpio_controller, reader, writer)
 
-    asyncio.run(asyncio.start_server(serve_gpios, "0.0.0.0", 8765))
+    asyncio.create_task(asyncio.start_server(serve_gpios, "0.0.0.0", 8765))
 
-    await gpio_controller.heartbeat(gpio="LED", on_time=0.1, ratio=10)
+    await gpio_controller.heartbeat(gpio="LED", on_time=0.05, ratio=50)
 
 
 if __name__ == "__main__":
