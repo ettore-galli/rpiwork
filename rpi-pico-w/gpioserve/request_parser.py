@@ -18,14 +18,13 @@ async def parse_request(reader) -> Tuple[str, dict, str]:
 
     while True:
         b_line = await reader.readline()
-        print(str(b_line))
         if b_line == b"\r\n":
             break
         b_headers.append(b_line)
 
     headers_map = await build_headers_map(b_headers)
 
-    content_length = headers_map.get("content_length", 0)
+    content_length = int(headers_map.get("content-length", 0))
 
     b_body = await reader.read(content_length) if content_length > 0 else b""
 

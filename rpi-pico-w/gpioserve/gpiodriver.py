@@ -2,9 +2,9 @@ from machine import Pin
 import time
 import uasyncio as asyncio
 
+
 class SwitchDriver:
     def __init__(self, gpios: List[Union[int, str]]):
-
         self.gpios = {gpio: Pin(gpio, Pin.OUT) for gpio in gpios}
 
     def on(self, gpio: int) -> None:
