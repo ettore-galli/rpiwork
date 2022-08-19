@@ -10,6 +10,7 @@ import uasyncio as asyncio
 
 from request_parser import parse_request
 
+import json
 
 def log_request(request, headers_map, body):
     logger.info("-" * 50)
@@ -17,12 +18,25 @@ def log_request(request, headers_map, body):
     for part in [request, headers_map, body]:
         logger.info(part)
 
+"""
+Example requests:
+curl -X POST http://192.168.1.10:8765 -d '{"1":1}'  # Led on
+curl -X POST http://192.168.1.10:8765 -d '{"1":0}'  # Led off
+"""
 
 async def serve(gpio_controller, reader, writer):
 
     request, headers_map, body = await parse_request(reader)
 
     log_request(request, headers_map, body)
+
+    try:
+        body_data = json.loads(body)
+    except Exception as parse_error:
+        logger.error(parse_error)
+        body_data = {}
+    
+    gpio_controller.set_value(1, body_data.get("1", 0))
 
     writer.write(b"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
     writer.write(b"<!DOCTYPE html><html><body>hello</body></html>")

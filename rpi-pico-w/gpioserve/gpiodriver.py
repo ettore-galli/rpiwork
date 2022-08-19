@@ -13,6 +13,9 @@ class SwitchDriver:
     def off(self, gpio: int) -> None:
         self.gpios[gpio].off()
 
+    def set_value(self, gpio: int, value: int):
+        self.gpios[gpio].value(value)
+
     def blink_loop(self, gpio: int, delay_seconds: float):
         while True:
             self.on(gpio)
