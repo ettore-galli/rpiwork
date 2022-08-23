@@ -2,6 +2,8 @@ from machine import Pin, SPI, PWM
 import framebuf
 import time
 
+from sysfont import sysfont
+
 BL = 5
 DC = 0
 RST = 7
@@ -182,20 +184,91 @@ class LCD_1inch8(framebuf.FrameBuffer):
         self.cs(1)
 
 
+ 
+    def draw_text(self, aPos, aString, aColor, aFont, aSize=1, nowrap=False):
+        """Draw a text at the given position.  If the string reaches the end of the
+        display it is wrapped to aPos[0] on the next line.  aSize may be an integer
+        which will size the font uniformly on w,h or a or any type that may be
+        indexed with [0] or [1]."""
+
+        if aFont == None:
+            return
+
+        # Make a size either from single value or 2 elements.
+        if (type(aSize) == int) or (type(aSize) == float):
+            wh = (aSize, aSize)
+        else:
+            wh = aSize
+
+        px, py = aPos
+        
+        width = wh[0] * aFont["Width"] + 1
+        for c in aString:
+            self.char((px, py), c, aColor, aFont, wh)
+            px += width
+            # We check > rather than >= to let the right (blank) edge of the
+            # character print off the right of the screen.
+            if px + width > self.width:
+                if nowrap:
+                    break
+                else:
+                    py += aFont["Height"] * wh[1] + 1
+                    px = aPos[0]
+
+ 
+    def char(self, aPos, aChar, aColor, aFont, aSizes):
+        """Draw a character at the given position using the given font and color.
+        aSizes is a tuple with x, y as integer scales indicating the
+        # of pixels to draw for each pixel in the character."""
+
+        if aFont == None:
+            return
+
+        startchar = aFont["Start"]
+        endchar = aFont["End"]
+
+        ci = ord(aChar)
+
+        if startchar <= ci <= endchar:
+            fontw = aFont["Width"]
+            fonth = aFont["Height"]
+            ci = (ci - startchar) * fontw
+
+            charA = aFont["Data"][ci : ci + fontw]
+
+            px = aPos[0]
+
+ 
+            for c in charA:
+                py = aPos[1]
+                for r in range(fonth):
+                    if c & 0x01:
+                        self.fill_rect(px, py, aSizes[0], aSizes[1], aColor)
+                    py += aSizes[1]
+                    c >>= 1
+                px += aSizes[0]
+
 def get_time_hms():
     return time.gmtime()[3:6]
 
 
-def fmt_time(time_hms):
+def fmt_time_hms(time_hms):
     return str("%.2d:%.2d:%.2d" % time_hms)
 
+def fmt_time_hm(time_hms):
+    return str("%.2d:%.2d" % time_hms[:2])
 
 def display_time(lcd, dsp_time):
     lcd.fill(LCD.BLACK)
-    lcd.text(dsp_time, 10, 10, lcd.WHITE)
+    # lcd.text(dsp_time, 10, 10, lcd.WHITE)
+    lcd.draw_text((10, 10), dsp_time, lcd.WHITE, sysfont, aSize=4)
     lcd.show()
 
 
+def render_time(lcd, curtime):
+    dsp_time = fmt_time_hm(curtime)
+    display_time(lcd=lcd, dsp_time=dsp_time)
+    
 def clock(lcd):
 
     curtime = ()
@@ -206,9 +279,9 @@ def clock(lcd):
 
         if now != curtime:
             curtime = now
-            dsp_time = fmt_time(curtime)
-            display_time(lcd=lcd, dsp_time=dsp_time)
-            print(dsp_time, type(lcd))
+            render_time(lcd=lcd, curtime=curtime)
+
+
 
         time.sleep_ms(10)
 

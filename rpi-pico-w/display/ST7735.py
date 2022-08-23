@@ -207,13 +207,16 @@ class TFT(object):
         endchar = aFont["End"]
 
         ci = ord(aChar)
+
         if startchar <= ci <= endchar:
             fontw = aFont["Width"]
             fonth = aFont["Height"]
             ci = (ci - startchar) * fontw
 
             charA = aFont["Data"][ci : ci + fontw]
+
             px = aPos[0]
+
             if aSizes[0] <= 1 and aSizes[1] <= 1:
                 buf = bytearray(2 * fonth * fontw)
                 for q in range(fontw):
@@ -316,7 +319,7 @@ class TFT(object):
         self.vline((aStart[0] + aSize[0] - 1, aStart[1]), aSize[1], aColor)
 
     @micropython.native
-    def fillrect(self, aStart, aSize, aColor):
+    def fillrect(self, aStart, aSize, aColor, bufSize=32):
         """Draw a filled rectangle.  aStart is the smallest coordinate corner
         and aSize is a tuple indicating width, height."""
         start = (clamp(aStart[0], 0, self._size[0]), clamp(aStart[1], 0, self._size[1]))
@@ -336,7 +339,8 @@ class TFT(object):
 
         self._setwindowloc(start, end)
         numPixels = (end[0] - start[0] + 1) * (end[1] - start[1] + 1)
-        self._setColor(aColor)
+
+        self._setColor(aColor, aPixels=bufSize)
         self._draw(numPixels)
 
     @micropython.native
@@ -388,9 +392,9 @@ class TFT(object):
             self.vline((aPos[0] + x, y0), ln, aColor)
             self.vline((aPos[0] - x, y0), ln, aColor)
 
-    def fill(self, aColor=BLACK):
+    def fill(self, aColor=BLACK, bufSize=32):
         """Fill screen with the given color."""
-        self.fillrect((0, 0), self._size, aColor)
+        self.fillrect((0, 0), self._size, aColor, bufSize)
 
     def image(self, x0, y0, x1, y1, data):
         self._setwindowloc((x0, y0), (x1, y1))
@@ -420,20 +424,29 @@ class TFT(object):
         self._writedata(data2)
 
     @micropython.native
-    def _setColor(self, aColor):
+    def _setColor(self, aColor, aPixels=32):
         self.colorData[0] = aColor >> 8
         self.colorData[1] = aColor
-        self.buf = bytes(self.colorData) * 32
+        self.buf = bytes(self.colorData) * aPixels
+
+    @micropython.native
+    def _drawbuf(self):
+        """Send given color buffer to the device at once."""
+        self.dc(1)
+        self.cs(0)
+        self.spi.write(self.buf)
+        self.cs(1)
 
     @micropython.native
     def _draw(self, aPixels):
         """Send given color to the device aPixels times."""
+        buflen = len(self.buf) // len(self.colorData)
 
         self.dc(1)
         self.cs(0)
-        for i in range(aPixels // 32):
+        for i in range(aPixels // buflen):
             self.spi.write(self.buf)
-        rest = int(aPixels) % 32
+        rest = int(aPixels) % buflen
         if rest > 0:
             buf2 = bytes(self.colorData) * rest
             self.spi.write(buf2)
