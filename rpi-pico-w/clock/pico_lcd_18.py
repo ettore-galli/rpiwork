@@ -3,6 +3,20 @@ import framebuf
 
 
 class LCDWiring:
+    """
+    SYMBOL  | DESCRIPTION
+    --------+---------------------------------------------------------
+    VCC     | Power (3.3V/5V input)
+    GND     | Ground
+    DIN     | SPI data input ("mosi")
+    CLK     | SPI clock input
+    CS      | Chip selection, low active
+    DC      | Data/Command selection (high for data, low for command)
+    RST     | Reset, low active
+    BL      | Backlight
+
+    """
+
     def __init__(self, cs, sck, mosi, miso, rst, dc, bl):
         self.cs = cs
         # SCK / SCL
@@ -221,15 +235,21 @@ class LCD_1inch8(framebuf.FrameBuffer):
         # Make a size either from single value or 2 elements.
         if (type(aSize) == int) or (type(aSize) == float):
             wh = (aSize, aSize)
+            dw = aSize
         else:
             wh = aSize
+            dw = aSize[0]
 
         px, py = aPos
 
-        width = wh[0] * aFont["Width"] + 1
+        width = wh[0] * aFont["Width"] + max(1, int(dw))
+
         for c in aString:
+
             self.char((px, py), c, aColor, aFont, wh)
+
             px += width
+
             # We check > rather than >= to let the right (blank) edge of the
             # character print off the right of the screen.
             if px + width > self.width:
