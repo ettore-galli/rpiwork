@@ -4,29 +4,43 @@ import time
 
 from sysfont import sysfont
 
-BL = 5
-DC = 0
-RST = 7
-MOSI = 3
-SCK = 2
-CS = 1
+# BL = 5
+# DC = 0
+# RST = 7
+# MOSI = 3
+# SCK = 2
+# CS = 1
+
+
+class LCDWiring:
+    def __init__(self, cs, sck, mosi, miso, rst, dc, bl):
+        self.cs = cs
+        self.sck = sck
+        self.mosi = mosi
+        self.miso = miso
+        self.rst = rst
+        self.dc = dc
+        self.bl = bl
+
+
+SPI0_WIRING = LCDWiring(cs=1, sck=2, mosi=3, miso=None, rst=7, dc=0, bl=5)
 
 
 class LCD_1inch8(framebuf.FrameBuffer):
-    def __init__(self):
+    def __init__(self, wiring: LCDWiring):
         self.width = 160
         self.height = 128
 
-        self.cs = Pin(CS, Pin.OUT)
-        self.rst = Pin(RST, Pin.OUT)
+        self.cs = Pin(wiring.cs, Pin.OUT)
+        self.rst = Pin(wiring.rst, Pin.OUT)
 
         self.cs(1)
         self.spi = SPI(1)
         self.spi = SPI(1, 1000_000)
         self.spi = SPI(
-            0, 10000_000, polarity=0, phase=0, sck=Pin(SCK), mosi=Pin(MOSI), miso=None
+            0, 10000_000, polarity=0, phase=0, sck=Pin(wiring.sck), mosi=Pin(wiring.mosi), miso=wiring.miso
         )
-        self.dc = Pin(DC, Pin.OUT)
+        self.dc = Pin(wiring.dc, Pin.OUT)
         self.dc(1)
         self.buffer = bytearray(self.height * self.width * 2)
         super().__init__(self.buffer, self.width, self.height, framebuf.RGB565)
@@ -84,6 +98,7 @@ class LCD_1inch8(framebuf.FrameBuffer):
         self.write_data(0x2D)
 
         self.write_cmd(0xB4)
+
         # Column inversion
         self.write_data(0x07)
 
@@ -107,6 +122,7 @@ class LCD_1inch8(framebuf.FrameBuffer):
         self.write_data(0xEE)
 
         self.write_cmd(0xC5)
+
         # VCOM
         self.write_data(0x0E)
 
@@ -264,6 +280,7 @@ def display_time(lcd, dsp_time):
     height = 128
     pos_h = (height - 8 * aSize) // 2
     lcd.draw_text((10, pos_h), dsp_time, lcd.WHITE, sysfont, aSize=aSize)
+    lcd.text("Raspberry Pi Pico", 2, 8, LCD.WHITE)
     lcd.show()
 
 
@@ -288,11 +305,14 @@ def clock(lcd):
 
 
 if __name__ == "__main__":
-    pwm = PWM(Pin(BL))
+    wiring = SPI0_WIRING
+    
+    
+    pwm = PWM(Pin(wiring.bl))
     pwm.freq(1000)
     pwm.duty_u16(32768)  # max 65535
 
-    LCD = LCD_1inch8()
+    LCD = LCD_1inch8(wiring)
 
     LCD.fill(LCD.WHITE)
     # time.sleep(1)

@@ -287,6 +287,20 @@ def clock(lcd):
         time.sleep_ms(10)
 
 
+def alpha(lcd):
+
+    alfa0 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    alfa = alfa0 + alfa0.lower()
+
+    while True:
+        for chunk in [alfa[i : i + 6] for i in range(0, len(alfa), 6)]:
+            lcd.fill(LCD.BLACK)
+            lcd.draw_text((10, 10), chunk, lcd.WHITE, sysfont, aSize=4)
+            lcd.show()
+
+            time.sleep_ms(1000)
+
+
 if __name__ == "__main__":
     pwm = PWM(Pin(BL))
     pwm.freq(1000)
@@ -297,6 +311,7 @@ if __name__ == "__main__":
     LCD.fill(LCD.WHITE)
     # time.sleep(1)
 
+    alpha(lcd=LCD)
     clock(lcd=LCD)
     # color BRG
 
