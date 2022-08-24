@@ -7,8 +7,10 @@ from sysfont import sysfont
 from pico_lcd_18 import LCD_1inch8, SPI0_WIRING
 
 from base import RunEnvironment
-from connection import read_connection_parameters
+from connection import read_connection_parameters, get_wlan_connection
 from ulogger import ulogger as logger
+
+from ntp_query import get_ntp_time
 
 
 def get_time_hms():
@@ -66,6 +68,16 @@ async def refresh_display(lcd, display_data_retriever, refresh_display_delay_ms=
         await asyncio.sleep_ms(refresh_display_delay_ms)
 
 
+async def sync_ntp_time(sync_delay_ms=5000, gmt_offset_h=2):
+
+    while True:
+        try:
+            print("ntp", get_ntp_time(gmt_offset_h=gmt_offset_h))
+        except Exception as error:
+            print (error)
+        await asyncio.sleep_ms(sync_delay_ms)
+
+
 async def retrieve_time(display_data_time_updater, retrieve_delay_ms=10):
 
     while True:
@@ -78,8 +90,6 @@ async def retrieve_time(display_data_time_updater, retrieve_delay_ms=10):
 async def main():
 
     display_data = {}
-
-    # tasks = [asyncio.create_task(alive()), asyncio.create_task(clock(lcd=LCD))]
 
     def display_data_time_updater(time_hms):
         display_data["time_hms"] = time_hms
@@ -94,6 +104,7 @@ async def main():
         asyncio.create_task(
             refresh_display(lcd=LCD, display_data_retriever=display_data_retriever)
         ),
+        asyncio.create_task(sync_ntp_time()),
     ]
 
     for task in tasks:
@@ -107,6 +118,8 @@ if __name__ == "__main__":
         network_parameters=network_parameters, logger=logger
     )
 
+    wlan_connection = get_wlan_connection(run_environment=run_environment)
+    
     wiring = SPI0_WIRING
 
     LCD = LCD_1inch8(wiring)
@@ -118,5 +131,3 @@ if __name__ == "__main__":
         run_environment.logger.error(str(error))
     finally:
         asyncio.new_event_loop()
-
-    clock(lcd=LCD)
