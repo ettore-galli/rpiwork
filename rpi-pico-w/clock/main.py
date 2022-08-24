@@ -1,5 +1,5 @@
 import time
-from machine import Pin
+from machine import Pin, RTC
 
 from sysfont import sysfont
 from pico_lcd_18 import LCD_1inch8, SPI0_WIRING
