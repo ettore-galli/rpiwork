@@ -50,33 +50,54 @@ def render_time(lcd, curtime):
     display_time(lcd=lcd, curtime=curtime)
 
 
-async def clock(lcd):
+async def refresh_display(lcd, display_data_retriever, refresh_display_delay_ms=10):
 
-    curtime = ()
+    display_data = display_data_retriever()
 
     while True:
 
+        current_display_data = display_data_retriever()
+
+        if current_display_data != display_data:
+            display_data = current_display_data
+            # TODO: Render everything, not just time
+            render_time(lcd=lcd, curtime=display_data["time_hms"])
+
+        await asyncio.sleep_ms(refresh_display_delay_ms)
+
+
+async def retrieve_time(display_data_time_updater, retrieve_delay_ms=10):
+
+    while True:
         now = get_time_hms()
+        display_data_time_updater(now)
 
-        if now != curtime:
-            curtime = now
-            render_time(lcd=lcd, curtime=curtime)
-
-        await asyncio.sleep_ms(10)
+        await asyncio.sleep_ms(retrieve_delay_ms)
 
 
-async def alive():
-    while True:
-        print("alive")
-        await asyncio.sleep(1)
-        
 async def main():
-    tasks = [asyncio.create_task(alive()), asyncio.create_task(clock(lcd=LCD))]
+
+    display_data = {}
+
+    # tasks = [asyncio.create_task(alive()), asyncio.create_task(clock(lcd=LCD))]
+
+    def display_data_time_updater(time_hms):
+        display_data["time_hms"] = time_hms
+
+    def display_data_retriever():
+        return display_data.copy()
+
+    tasks = [
+        asyncio.create_task(
+            retrieve_time(display_data_time_updater=display_data_time_updater)
+        ),
+        asyncio.create_task(
+            refresh_display(lcd=LCD, display_data_retriever=display_data_retriever)
+        ),
+    ]
 
     for task in tasks:
         await task
-
-
 
 
 if __name__ == "__main__":
@@ -98,4 +119,4 @@ if __name__ == "__main__":
     finally:
         asyncio.new_event_loop()
 
-    # clock(lcd=LCD)
+    clock(lcd=LCD)
