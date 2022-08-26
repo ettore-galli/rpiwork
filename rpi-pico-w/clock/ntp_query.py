@@ -25,7 +25,7 @@ def get_ntp_time(host="pool.ntp.org", port=123, buf=1024, gmt_offset_h=0):
     # connect to server
     client = socket.socket(AF_INET, SOCK_DGRAM)
     client.connect(addr)
-
+    client.settimeout(1.0)
     client.sendto(msg.encode("utf-8"), addr)
 
     msg, address = client.recvfrom(buf)

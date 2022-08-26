@@ -25,7 +25,7 @@ def fmt_time_hm(time_hms):
     return str("%.2d:%.2d" % time_hms[:2])
 
 
-def seconds_bar(lcd, pos_x, pos_y, width, height, color, seconds):
+def render_seconds_bar(lcd, pos_x, pos_y, width, height, color, seconds):
     seconds_width = int(width * seconds / 60)
     lcd.rect(pos_x, pos_y, width, height, color)
     lcd.fill_rect(pos_x, pos_y + 1, seconds_width, height - 2, color)
@@ -51,16 +51,15 @@ def render_big_time(lcd, dsp_time):
 
 
 def render_display(lcd, message="", curtime=(0, 0, 0, 0, 0, 0)):
+    
     dsp_time = fmt_time_hm(curtime)
     seconds = curtime[-1]
 
     lcd.fill(LCD.BLACK)
 
     render_big_time(lcd=lcd, dsp_time=dsp_time)
-
     render_multiline_text(lcd=lcd, text=message, pos_w=2, pos_h=8, color=LCD.WHITE)
-
-    seconds_bar(lcd, 10, 100, 130, 10, LCD.WHITE, seconds)
+    render_seconds_bar(lcd, 10, 100, 130, 10, LCD.WHITE, seconds)
 
     lcd.show()
 
@@ -93,7 +92,9 @@ async def refresh_display(lcd, display_data_retriever, refresh_display_delay_ms=
         await asyncio.sleep_ms(refresh_display_delay_ms)
 
 
-async def sync_ntp_time(run_environment, display_message_updater, sync_delay_ms=5000, gmt_offset_h=2):
+async def sync_ntp_time(
+    run_environment, display_message_updater, sync_delay_ms=5000, gmt_offset_h=2
+):
     while True:
         try:
             display_message_updater(message="Syncing real time...")
@@ -101,7 +102,7 @@ async def sync_ntp_time(run_environment, display_message_updater, sync_delay_ms=
             if real_time:
                 rtc_update_tuple = real_time[:3] + (0,) + real_time[3:7]
                 RTC().datetime(rtc_update_tuple)
-            display_message_updater(message="Time is ok")    
+            display_message_updater(message="Time is ok")
         except Exception as error:
             error_message = str(error)
             run_environment.logger.error(error_message)
@@ -139,7 +140,10 @@ async def main(run_environment):
         return display_data.copy()
 
     async def sync_ntp_time_worker(display_message_updater):
-        await sync_ntp_time(run_environment=run_environment, display_message_updater=display_message_updater)
+        await sync_ntp_time(
+            run_environment=run_environment,
+            display_message_updater=display_message_updater,
+        )
 
     display_message_updater(message="Connecting")
     draw_display(lcd=LCD, display_data=display_data_retriever())
@@ -162,7 +166,9 @@ async def main(run_environment):
         asyncio.create_task(
             retrieve_time(display_data_time_updater=display_data_time_updater)
         ),
-        asyncio.create_task(sync_ntp_time_worker(display_message_updater=display_message_updater)),
+        asyncio.create_task(
+            sync_ntp_time_worker(display_message_updater=display_message_updater)
+        ),
     ]
 
     for task in tasks:
@@ -183,6 +189,8 @@ if __name__ == "__main__":
     try:
         asyncio.run(main(run_environment))
     except Exception as error:
+        message = str(error)
         run_environment.logger.error(str(error))
+        render_display(lcd=LCD, message=error_message)
     finally:
         asyncio.new_event_loop()
