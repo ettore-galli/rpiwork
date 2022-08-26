@@ -93,14 +93,19 @@ async def refresh_display(lcd, display_data_retriever, refresh_display_delay_ms=
         await asyncio.sleep_ms(refresh_display_delay_ms)
 
 
-async def sync_ntp_time(run_environment, sync_delay_ms=5000, gmt_offset_h=2):
+async def sync_ntp_time(run_environment, display_message_updater, sync_delay_ms=5000, gmt_offset_h=2):
     while True:
         try:
+            display_message_updater(message="Syncing real time...")
             real_time = get_ntp_time(gmt_offset_h=gmt_offset_h)
-            rtc_update_tuple = real_time[:3] + (0,) + real_time[3:7]
-            RTC().datetime(rtc_update_tuple)
+            if real_time:
+                rtc_update_tuple = real_time[:3] + (0,) + real_time[3:7]
+                RTC().datetime(rtc_update_tuple)
+            display_message_updater(message="Time is ok")    
         except Exception as error:
-            run_environment.logger.error(str(error))
+            error_message = str(error)
+            run_environment.logger.error(error_message)
+            display_message_updater(message=error_message)
         await asyncio.sleep_ms(sync_delay_ms)
 
 
@@ -133,8 +138,8 @@ async def main(run_environment):
     def display_data_retriever():
         return display_data.copy()
 
-    async def sync_ntp_time_worker():
-        await sync_ntp_time(run_environment)
+    async def sync_ntp_time_worker(display_message_updater):
+        await sync_ntp_time(run_environment=run_environment, display_message_updater=display_message_updater)
 
     display_message_updater(message="Connecting")
     draw_display(lcd=LCD, display_data=display_data_retriever())
@@ -157,7 +162,7 @@ async def main(run_environment):
         asyncio.create_task(
             retrieve_time(display_data_time_updater=display_data_time_updater)
         ),
-        asyncio.create_task(sync_ntp_time_worker()),
+        asyncio.create_task(sync_ntp_time_worker(display_message_updater=display_message_updater)),
     ]
 
     for task in tasks:
