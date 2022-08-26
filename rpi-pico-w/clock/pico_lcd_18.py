@@ -71,6 +71,10 @@ class LCD_1inch8(framebuf.FrameBuffer):
 
         self.start_backlight(wiring=wiring, brightness=32767)
 
+    def rgb565(self, red, green, blue):
+        # Reverse engineered is de facto binary bbbbbrrrrrrggggg "brg565"
+        return ((blue >> 3) << 11) + ((red >> 2) << 5) + (green >> 3)
+
     def start_backlight(self, wiring, brightness=32767, frequency=1000):
         pwm = PWM(Pin(wiring.bl))
         pwm.freq(frequency)
