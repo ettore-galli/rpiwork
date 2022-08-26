@@ -65,16 +65,21 @@ async def refresh_display(lcd, display_data_retriever, refresh_display_delay_ms=
             # TODO: Render everything, not just time
             render_time(lcd=lcd, curtime=display_data["time_hms"])
 
+
         await asyncio.sleep_ms(refresh_display_delay_ms)
 
 
-async def sync_ntp_time(sync_delay_ms=5000, gmt_offset_h=2):
-
+async def sync_ntp_time(run_environment, sync_delay_ms=5000, gmt_offset_h=2):
+    
     while True:
         try:
-            print("ntp", get_ntp_time(gmt_offset_h=gmt_offset_h))
+            real_time = get_ntp_time(gmt_offset_h=gmt_offset_h)
+            run_environment.logger.info(f"real time: {real_time}")
+            rtc_update_tuple = real_time[:3] + (0,) + real_time[3:7]
+ 
+            RTC().datetime(rtc_update_tuple)
         except Exception as error:
-            print (error)
+            run_environment.logger.error(str(error))
         await asyncio.sleep_ms(sync_delay_ms)
 
 
@@ -87,7 +92,7 @@ async def retrieve_time(display_data_time_updater, retrieve_delay_ms=10):
         await asyncio.sleep_ms(retrieve_delay_ms)
 
 
-async def main():
+async def main(run_environment):
 
     display_data = {}
 
@@ -97,6 +102,11 @@ async def main():
     def display_data_retriever():
         return display_data.copy()
 
+    
+
+    async def sync_ntp_time_worker():
+        await sync_ntp_time(run_environment)
+
     tasks = [
         asyncio.create_task(
             retrieve_time(display_data_time_updater=display_data_time_updater)
@@ -104,7 +114,7 @@ async def main():
         asyncio.create_task(
             refresh_display(lcd=LCD, display_data_retriever=display_data_retriever)
         ),
-        asyncio.create_task(sync_ntp_time()),
+        asyncio.create_task(sync_ntp_time_worker()),
     ]
 
     for task in tasks:
@@ -125,7 +135,7 @@ if __name__ == "__main__":
     LCD = LCD_1inch8(wiring)
 
     try:
-        asyncio.run(main())
+        asyncio.run(main(run_environment))
 
     except Exception as error:
         run_environment.logger.error(str(error))
