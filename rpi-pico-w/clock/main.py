@@ -51,7 +51,7 @@ def render_big_time(lcd, dsp_time, color):
 
 
 def render_temperature(lcd, temperature, pos_w, pos_h, color):
-    temperature_text = str(temperature[0]) + " " + str(temperature[1])
+    temperature_text = str(round(temperature[0], 1)) + " " + str(temperature[1])
 
     lcd.text(temperature_text, pos_w, pos_h, color)
 
