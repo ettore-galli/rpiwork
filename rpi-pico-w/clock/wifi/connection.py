@@ -8,6 +8,7 @@ from base import RunEnvironment, NetworkParameters
 def read_connection_parameters(network_settings: dict) -> NetworkParameters:
     return NetworkParameters(**network_settings)
 
+
 def get_wlan_connection(run_environment: RunEnvironment) -> network.WLAN:
 
     wlan = network.WLAN(network.STA_IF)
