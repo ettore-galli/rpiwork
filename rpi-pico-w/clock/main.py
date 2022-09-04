@@ -3,15 +3,16 @@ import uasyncio as asyncio
 
 from machine import Pin, RTC, ADC
 
-from sysfont import sysfont
-from pico_lcd_18 import LCD_1inch8, SPI0_WIRING
+from display.sysfont import sysfont
+from display.pico_lcd_18 import LCD_1inch8, SPI0_WIRING
 
 from base import RunEnvironment
-from connection import read_connection_parameters, get_wlan_connection
+from wifi.connection import read_connection_parameters, get_wlan_connection
 from ulogger import ulogger as logger
 
-from ntp_query import get_ntp_time
+from ntp.ntp_query import get_ntp_time
 
+from secrets import network_settings
 
 def get_time_hms():
     return time.gmtime()[3:6]
@@ -216,7 +217,7 @@ async def main(run_environment):
 
 
 if __name__ == "__main__":
-    network_parameters = read_connection_parameters()
+    network_parameters = read_connection_parameters(network_settings)
 
     run_environment = RunEnvironment(
         network_parameters=network_parameters, logger=logger

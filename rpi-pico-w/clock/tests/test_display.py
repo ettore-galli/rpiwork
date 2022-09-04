@@ -1,4 +1,4 @@
-from pico_lcd_18 import LCD_1inch8, SPI0_WIRING
+from display.pico_lcd_18 import LCD_1inch8, SPI0_WIRING
 
 
 def instantiate_display():
