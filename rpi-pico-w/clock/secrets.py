@@ -1,1 +1,1 @@
-network_settings = {"ssid": "aaaaa", "password": "bbbbb", "port":9999}
+network_settings = {"ssid": "aaaaa", "password": "bbbbb", "port": 9999}

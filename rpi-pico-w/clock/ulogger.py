@@ -9,7 +9,9 @@ class ULogger:
         return time.gmtime()
 
     def __log(self, log_type: str, message: str) -> str:
-        log_message = f"{self.__format_time(self.__get_current_time())} {log_type} {message}"
+        log_message = (
+            f"{self.__format_time(self.__get_current_time())} {log_type} {message}"
+        )
         print(log_message)
 
     def info(self, message: str):

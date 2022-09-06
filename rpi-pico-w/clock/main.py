@@ -14,6 +14,7 @@ from ntp.ntp_query import get_ntp_time
 
 from secrets import network_settings
 
+
 def get_time_hms():
     return time.gmtime()[3:6]
 
