@@ -2,6 +2,7 @@ import time
 
 from display.sysfont import sysfont
 
+
 def get_time_hms():
     return time.gmtime()[3:6]
 
@@ -15,7 +16,7 @@ def fmt_time_hm(time_hms):
 
 
 def render_seconds_bar(lcd, pos_x, pos_y, width, height, color, seconds):
-    seconds_width = int(width * seconds / 60)
+    seconds_width = int(1.0 * width * seconds / 60)
     lcd.rect(pos_x, pos_y, width + 2, height, color)
     lcd.fill_rect(pos_x + 1, pos_y + 1, seconds_width, height - 2, color)
 
@@ -23,13 +24,16 @@ def render_seconds_bar(lcd, pos_x, pos_y, width, height, color, seconds):
 def render_multiline_text(lcd, text, pos_w, pos_h, color):
     limit = 18
     line_h = 10
-    line_one = text[:18]
-    line_two = text[18:]
+    line_one = text[:limit]
+    line_two = text[limit : 2 * limit]
+    line_three = text[2 * limit :]
 
     if line_one:
         lcd.text(line_one, pos_w, pos_h, color)
     if line_two:
         lcd.text(line_two, pos_w, pos_h + line_h, color)
+    if line_three:
+        lcd.text(line_three, pos_w, pos_h + 2 * line_h, color)
 
 
 def render_big_time(lcd, dsp_time, color):

@@ -4,7 +4,7 @@ import uasyncio as asyncio
 from machine import Pin, RTC, ADC
 
 from display.sysfont import sysfont
-from display.pico_lcd_18 import LCD_1inch8, SPI0_WIRING
+from display.connection import instantiate_display
 from display.draw import (
     get_time_hms,
     fmt_time_hms,
@@ -164,9 +164,7 @@ if __name__ == "__main__":
 
     temp_sensor = ADC(4)
 
-    wiring = SPI0_WIRING
-
-    LCD = LCD_1inch8(wiring)
+    LCD = instantiate_display()
 
     try:
         asyncio.run(main(run_environment))
