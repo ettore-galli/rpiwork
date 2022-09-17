@@ -73,8 +73,10 @@ def dsp_char_n(fontw, fonth, char_data, n_half: int):
 
 
 if __name__ == "__main__":
-    for ichar in ["1", "2", "3"]:
+    for ichar in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ":"]:
+        
         fontw, fonth, char_data = pick_char_data(sysfont, ichar)
+        
         print([hex(int(chard)) for chard in char_data])
         print([(int(chard)) for chard in char_data])
         print("\n")

@@ -263,33 +263,39 @@ class LCD_1inch8(framebuf.FrameBuffer):
                     py += aFont["Height"] * wh[1] + 1
                     px = aPos[0]
 
+    def pick_char_data(self, aFont, aChar):
+        """Pick relevant data for drawing a single character from font map"""
+        startchar = aFont["Start"]
+
+        fontw = aFont["Width"]
+        fonth = aFont["Height"]
+
+        ch = ord(aChar) if isinstance(aChar, str) else aChar
+
+        ci = (ch - startchar) * fontw
+
+        font_data = aFont["Data"]
+
+        charA = font_data[ci : ci + fontw]
+
+        return fontw, fonth, charA
+
     def char(self, aPos, aChar, aColor, aFont, aSizes):
         """Draw a character at the given position using the given font and color.
         aSizes is a tuple with x, y as integer scales indicating the
         # of pixels to draw for each pixel in the character."""
 
-        if aFont == None:
-            return
+        _, fonth, charA = self.pick_char_data(aFont, aChar)
 
-        startchar = aFont["Start"]
-        endchar = aFont["End"]
+        px = aPos[0]
 
-        ci = ord(aChar)
+        for c in charA:
 
-        if startchar <= ci <= endchar:
-            fontw = aFont["Width"]
-            fonth = aFont["Height"]
-            ci = (ci - startchar) * fontw
+            py = aPos[1]
 
-            charA = aFont["Data"][ci : ci + fontw]
-
-            px = aPos[0]
-
-            for c in charA:
-                py = aPos[1]
-                for r in range(fonth):
-                    if c & 0x01:
-                        self.fill_rect(px, py, aSizes[0], aSizes[1], aColor)
-                    py += aSizes[1]
-                    c >>= 1
-                px += aSizes[0]
+            for r in range(fonth):
+                if c & 0x01:
+                    self.fill_rect(px, py, aSizes[0], aSizes[1], aColor)
+                py += aSizes[1]
+                c >>= 1
+            px += aSizes[0]
