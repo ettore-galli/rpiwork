@@ -36,6 +36,15 @@ class LCDWiring:
 SPI0_WIRING = LCDWiring(cs=1, sck=2, mosi=3, miso=None, rst=7, dc=0, bl=5)
 
 
+class MosaicTile:
+    def __init__(self, pos_x: int, pos_y: int, size_x: int, size_y: int, color: int):
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.size_x = size_x
+        self.size_y = size_y
+        self.color = color
+
+
 class LCD_1inch8(framebuf.FrameBuffer):
     def __init__(self, wiring: LCDWiring):
 
@@ -280,12 +289,15 @@ class LCD_1inch8(framebuf.FrameBuffer):
 
         return fontw, fonth, charA
 
-    def char(self, aPos, aChar, aColor, aFont, aSizes):
-        """Draw a character at the given position using the given font and color.
-        aSizes is a tuple with x, y as integer scales indicating the
-        # of pixels to draw for each pixel in the character."""
+    def render_rectangle_mosaic(self, mosaic: List[MosaicTile]):
+        """Actually render a mosaic made of rectangles"""
+        for tile in mosaic:
+            self.fill_rect(tile.pos_x, tile.pos_y, tile.size_x, tile.size_y, tile.color)
 
-        _, fonth, charA = self.pick_char_data(aFont, aChar)
+    def prepare_char_draw_mosaic_data(self, aPos, fonth, charA, aSizes, aColor):
+        """Prepare drawing data for a single character, rendered as a mosaic of rectangles"""
+
+        mosaic: List[MosaicTile] = []
 
         px = aPos[0]
 
@@ -293,9 +305,20 @@ class LCD_1inch8(framebuf.FrameBuffer):
 
             py = aPos[1]
 
-            for r in range(fonth):
+            for _ in range(fonth):
                 if c & 0x01:
-                    self.fill_rect(px, py, aSizes[0], aSizes[1], aColor)
+                    mosaic.append(MosaicTile(px, py, aSizes[0], aSizes[1], aColor))
                 py += aSizes[1]
                 c >>= 1
             px += aSizes[0]
+
+        return mosaic
+
+    def char(self, aPos, aChar, aColor, aFont, aSizes):
+        """Draw a character at the given position using the given font and color.
+        aSizes is a tuple with x, y as integer scales indicating the
+        # of pixels to draw for each pixel in the character."""
+
+        _, fonth, charA = self.pick_char_data(aFont, aChar)
+        mosaic = self.prepare_char_draw_mosaic_data(aPos, fonth, charA, aSizes, aColor)
+        self.render_rectangle_mosaic(mosaic)
