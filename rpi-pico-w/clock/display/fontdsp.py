@@ -44,29 +44,137 @@ def char_matrix(fontw, fonth, char_data):
     return rendered
 
 
-def dsp_char_matrix(fontw, fonth, char_matrix, render_char="#"):
+def render_char(matrix_value):
+    if matrix_value == 1:
+        return "#"
+    if matrix_value == 2:
+        return "#"
+    return " "
+
+
+def dsp_char_matrix(fontw, fonth, char_matrix, render_char=render_char):
     return [
-        [
-            render_char if char_matrix[matrix_h][matrix_w] == 1 else " "
-            for matrix_w in range(fontw)
-        ]
+        [render_char(char_matrix[matrix_h][matrix_w]) for matrix_w in range(fontw)]
         for matrix_h in range(fonth)
     ]
 
 
+def replace_in_matrix(matrix, r, c, submatrix):
+    return [
+        [
+            submatrix[r_i - r][c_i - c]
+            if r <= r_i < r + len(submatrix) and c <= c_i < c + len(submatrix[0])
+            else element
+            for c_i, element in enumerate(row)
+        ]
+        for r_i, row in enumerate(matrix)
+    ]
+
+
+def print_render_matrix(matrix):
+    for row in matrix:
+        rendered = " ".join([str(item) for item in row])
+        print(rendered)
+
+
 def zoom_char(fontw, fonth, char_matrix, scale):
+
+    if scale % 2 != 0:
+        raise ValueError("Scale must be an even number")
+
     fontw_z = fontw * scale
     fonth_z = fonth * scale
 
     zoom_matrix = [[0 for _ in range(fontw_z)] for _ in range(fonth_z)]
 
+    def render_submatrix(scale):
+        return [[1 for _ in range(scale)] for _ in range(scale)]
+
+    def render_half_submatrix(scale):
+        return [[2 for _ in range(scale // 2)] for _ in range(scale // 2)]
+
+    def is_corner_filled(char_matrix, up, right, r, c):
+        return (
+            bool(char_matrix[(r + up)][(c + right)])
+            if 1 < r + 1 < len(char_matrix) and 1 < c + 1 < len(char_matrix[0])
+            else False
+        )
+
+    def is_up_left_corner(char_matrix, r, c):
+        return (
+            # is_corner_filled(char_matrix, -1, -1, r, c)
+            is_corner_filled(char_matrix, -1, 0, r, c)
+            and is_corner_filled(char_matrix, 0, -1, r, c)
+        )
+
+    def is_up_right_corner(char_matrix, r, c):
+        return (
+            # is_corner_filled(char_matrix, -1, 1, r, c)
+            is_corner_filled(char_matrix, -1, 0, r, c)
+            and is_corner_filled(char_matrix, 0, 1, r, c)
+        )
+
+    def is_down_left_corner(char_matrix, r, c):
+        return (
+            # is_corner_filled(char_matrix, 1, -1, r, c)
+            is_corner_filled(char_matrix, 0, -1, r, c)
+            and is_corner_filled(char_matrix, 1, 0, r, c)
+        )
+
+    def is_down_right_corner(char_matrix, r, c):
+        return (
+            # is_corner_filled(char_matrix, 1, 1, r, c)
+            is_corner_filled(char_matrix, 0, 1, r, c)
+            and is_corner_filled(char_matrix, 1, 0, r, c)
+        )
+
+    submatrix = render_submatrix(scale)
+    half_submatrix = render_half_submatrix(scale)
+
+    print_render_matrix(submatrix)
+    print_render_matrix(half_submatrix)
+
     for c in range(fontw):
         for r in range(fonth):
 
             if char_matrix[r][c] == 1:
-                for x in range(scale):
-                    for y in range(scale):
-                        zoom_matrix[r * scale + x][c * scale + y] = 1
+                zoom_matrix = replace_in_matrix(
+                    zoom_matrix, r * scale, c * scale, submatrix
+                )
+
+            else:
+
+                if is_up_left_corner(char_matrix, r, c):
+                    zoom_matrix = replace_in_matrix(
+                        zoom_matrix,
+                        r * scale,  # - scale // 2,
+                        c * scale,  # - scale // 2,
+                        half_submatrix,
+                    )
+
+                if is_up_right_corner(char_matrix, r, c):
+                    zoom_matrix = replace_in_matrix(
+                        zoom_matrix,
+                        r * scale,  #  - scale // 2,
+                        c * scale + scale // 2,
+                        half_submatrix,
+                    )
+
+                if is_down_left_corner(char_matrix, r, c):
+                    zoom_matrix = replace_in_matrix(
+                        zoom_matrix,
+                        r * scale + scale // 2,
+                        c * scale,  # - scale // 2,
+                        half_submatrix,
+                    )
+
+                if is_down_right_corner(char_matrix, r, c):
+                    zoom_matrix = replace_in_matrix(
+                        zoom_matrix,
+                        r * scale + scale // 2,
+                        c * scale + scale // 2,
+                        half_submatrix,
+                    )
 
     return fontw_z, fonth_z, zoom_matrix
 
@@ -77,54 +185,6 @@ def dsp_char_zoom(fontw, fonth, char_data, scale: int):
     fontw_z, fonth_z, matrix_z = zoom_char(fontw, fonth, matrix, scale)
 
     return dsp_char_matrix(fontw_z, fonth_z, matrix_z)
-
-
-# def dsp_char_n(fontw, fonth, char_data, n_half: int):
-
-#     n = 2 * n_half
-
-#     rendered = [["" for _ in range(fontw * n)] for _ in range(fonth * n)]
-
-#     for i, c in enumerate(char_data):
-
-#         di = n * i
-
-#         for h in range(n):
-
-#             for r in range(fonth):
-
-#                 dr = n * r
-
-#                 if c >> r & 0x01:
-#                     rendered[dr + h][di] = "*" * n
-#                 else:
-
-#                     fillmatrix = [[" " for _ in range(n)] for _ in range(n)]
-
-#                     if r > 0:
-#                         if c >> (r - 1) & 0x01:
-#                             for fr in range(n_half):
-#                                 for fc in range(n):
-#                                     fillmatrix[fr][fc] = "*"
-#                     if r < fontw:
-#                         if c >> (r + 1) & 0x01:
-#                             for fr in range(n_half, n):
-#                                 for fc in range(n):
-#                                     fillmatrix[fr][fc] = "*"
-
-#                     dw = r < fonth - 1 and c >> (r + 1) & 0x01
-#                     up = r > 0 and c >> (r - 1) & 0x01
-#                     le = i > 0 and char_data[i - 1] >> r & 0x01
-#                     ri = i < fontw - 1 and char_data[i + 1] >> r & 0x01
-
-#                     if False:
-#                         rendered[dr + h][di] = " " * n
-
-#                     else:
-#                         for q in range(n):
-#                             for w in range(n):
-#                                 rendered[dr + q][di + w] = fillmatrix[q][w]
-#     return rendered
 
 
 if __name__ == "__main__":
