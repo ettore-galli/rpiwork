@@ -8,6 +8,7 @@ Installare scaricandolo dal sito e uploadandolo
 
 https://www.raspberrypi.com/documentation/microcontrollers/micropython.html
 
+
 **non** fare la procedura da Thonny che non va (vecchia versione?)
 
 ## Blink da Thonny
