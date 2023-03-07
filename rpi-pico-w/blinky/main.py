@@ -4,7 +4,7 @@ from machine import Pin
 
 class OnboardLed:
     def __init__(self, delay_seconds: float):
-        self.led = Pin(1, Pin.OUT)
+        self.led = Pin("LED", Pin.OUT)
         self.delay_seconds = delay_seconds
 
     def on() -> None:
@@ -22,4 +22,4 @@ class OnboardLed:
 
 
 if __name__ == "__main__":
-    OnboardLed(delay_seconds=0.8).blink_loop()
+    OnboardLed(delay_seconds=0.6).blink_loop()
