@@ -9,24 +9,14 @@ from display.draw import (
     render_temperature,
     render_display,
     draw_display,
+    init_display,
+    draw_signal,
 )
 
 from base import RunEnvironment
 
 from ulogger import ulogger as logger
 
- 
-async def retrieve_temp(
-    temperature_sensor_reader, display_data_temp_updater, retrieve_delay_ms=330
-):
-    conversion_factor = 3.3 / (65535)
-    while True:
-        reading = temperature_sensor_reader() * conversion_factor
-        temperature = 27 - (reading - 0.706) / 0.001721
-
-        display_data_temp_updater(temperature)
-
-        await asyncio.sleep_ms(retrieve_delay_ms)
 
 async def refresh_display(lcd, display_data_retriever, refresh_display_delay_ms=10):
     display_data = display_data_retriever()
@@ -37,7 +27,7 @@ async def refresh_display(lcd, display_data_retriever, refresh_display_delay_ms=
         if current_display_data != display_data:
             display_data = current_display_data
 
-            draw_display(
+            draw_signal(
                 lcd=lcd,
                 display_data=display_data,
             )
@@ -45,8 +35,18 @@ async def refresh_display(lcd, display_data_retriever, refresh_display_delay_ms=
         await asyncio.sleep_ms(refresh_display_delay_ms)
 
 
+async def retrieve_signal(signal_reader, signal_updater, signal_delay_ms=1):
+    while True:
+        signal = signal_reader()
+        signal_updater(signal)
+        await asyncio.sleep_ms(signal_delay_ms)
+
+
 async def main(run_environment):
     display_data = {}
+    display_data["signal_prv"] = [0] * 180
+    display_data["signal"] = [0] * 180
+    display_data["signal_index"] = 0
 
     def display_message_updater(message):
         display_data["message"] = message
@@ -60,16 +60,40 @@ async def main(run_environment):
     def temperature_sensor_reader():
         return temp_sensor.read_u16()
 
-    draw_display(lcd=LCD, display_data=display_data_retriever())
+    def get_signal_reader():
+        import math
+
+        idx = 0
+
+        def signal_reader():
+            nonlocal idx
+
+            signal = int(100 * math.cos(idx / 100)) - 50
+            idx = (idx + 1) % 100
+            # return int(time.ticks_ms() / 100) % 100
+            return signal
+
+        return signal_reader
+
+    def signal_updater(value):
+        display_data["signal_prv"][display_data["signal_index"]] = display_data[
+            "signal"
+        ][display_data["signal_index"]]
+        display_data["signal"][display_data["signal_index"]] = value
+
+        display_data["signal_index"] = (display_data["signal_index"] + 1) % len(
+            display_data["signal"]
+        )
+
+    init_display(lcd=LCD)
 
     tasks = [
         asyncio.create_task(
             refresh_display(lcd=LCD, display_data_retriever=display_data_retriever)
         ),
         asyncio.create_task(
-            retrieve_temp(
-                temperature_sensor_reader=temperature_sensor_reader,
-                display_data_temp_updater=display_data_temp_updater,
+            retrieve_signal(
+                signal_reader=get_signal_reader(), signal_updater=signal_updater
             )
         ),
     ]

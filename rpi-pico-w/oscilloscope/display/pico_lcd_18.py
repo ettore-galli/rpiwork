@@ -19,7 +19,7 @@ class LCDWiring:
 
     def __init__(self, spi, cs, sck, mosi, miso, rst, dc, bl):
         self.spi = spi
-        
+
         self.cs = cs
         # SCK / SCL
         self.sck = sck
@@ -38,6 +38,7 @@ class LCDWiring:
 # SPI0_WIRING = LCDWiring(cs=1, sck=2, mosi=3, miso=None, rst=7, dc=0, bl=5)
 SPI0_WIRING = LCDWiring(spi=1, cs=9, sck=10, mosi=11, miso=None, rst=12, dc=8, bl=13)
 
+
 class MosaicTile:
     def __init__(self, pos_x: int, pos_y: int, size_x: int, size_y: int, color: int):
         self.pos_x = pos_x
@@ -49,7 +50,6 @@ class MosaicTile:
 
 class LCD_1inch8(framebuf.FrameBuffer):
     def __init__(self, wiring: LCDWiring):
-
         self.width = 160
         self.height = 128
 
@@ -260,7 +260,6 @@ class LCD_1inch8(framebuf.FrameBuffer):
         width = wh[0] * aFont["Width"] + max(1, int(dw))
 
         for c in aString:
-
             self.char((px, py), c, aColor, aFont, wh)
 
             px += width
@@ -304,7 +303,6 @@ class LCD_1inch8(framebuf.FrameBuffer):
         px = aPos[0]
 
         for c in charA:
-
             py = aPos[1]
 
             for _ in range(fonth):
