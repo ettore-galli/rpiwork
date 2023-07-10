@@ -1,0 +1,1 @@
+export PATH=~/.platformio/penv/bin:$PATH
