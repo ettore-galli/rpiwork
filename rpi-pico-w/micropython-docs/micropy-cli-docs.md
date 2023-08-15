@@ -1,5 +1,7 @@
 # Micropy-cli
 
+***This doc is oblolete and unreliable***
+
 ## Micropython: micropy-cli docs
 
 ### Official Micropython Documentation
