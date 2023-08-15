@@ -64,7 +64,7 @@ def render_value(value, top, stars):
 
 
 def display_adc(value):
-    # ruler="....:....1....:....2....:....3....:....4....:....5....:....6....:....7....:....8"
+    # e.g. ruler = "....:....1....:....2....:....3....:....4....:....5....:....6....:....7....:....8" # NOSONAR
     ruler = ". . . . : . . . . 1 . . . . : . . . . 2 . . . . : . . . . 3 . . ."
     n = render_value(value, 65535, len(ruler))
     rendered = ("[" + ruler[:n] + "]" if value > 0 else "--") + str(value)

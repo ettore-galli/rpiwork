@@ -17,6 +17,10 @@ screen  $(ls -d -1 /dev/*  | grep cu.usb)
 ```shell
 mpremote
 
+mpremote reset 
+
+mpremote soft-reset
+
 mpremote run [path/to/local]/main.py # Esegue su dispositivo 
 
 ```

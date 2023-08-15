@@ -10,10 +10,12 @@ class OnboardLed:
     def blink_loop(self):
         while True:
             self.led.on()
+            print("on")
             time.sleep(self.delay_seconds)
             self.led.off()
+            print("off")
             time.sleep(self.delay_seconds)
 
 
 if __name__ == "__main__":
-    OnboardLed(delay_seconds=0.2).blink_loop()
+    OnboardLed(delay_seconds=0.9).blink_loop()
