@@ -7,12 +7,6 @@ class OnboardLed:
         self.led = Pin("LED", Pin.OUT)
         self.delay_seconds = delay_seconds
 
-    def on() -> None:
-        self.led.on()
-
-    def on() -> None:
-        self.led.off()
-
     def blink_loop(self):
         while True:
             self.led.on()
@@ -22,4 +16,4 @@ class OnboardLed:
 
 
 if __name__ == "__main__":
-    OnboardLed(delay_seconds=0.6).blink_loop()
+    OnboardLed(delay_seconds=0.2).blink_loop()
