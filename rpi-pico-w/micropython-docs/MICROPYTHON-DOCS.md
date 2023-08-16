@@ -24,3 +24,24 @@ mpremote soft-reset
 mpremote run [path/to/local]/main.py # Esegue su dispositivo 
 
 ```
+
+## General Project Setup Workflow
+
+### 1. Create virtualenv
+
+```shell
+python3.11 -m venv myvirtualenv
+source myvirtualenv/bin/activate
+```
+
+### 2. Install micropython-cli
+
+```shell
+pip install --upgrade micropy-cli
+```
+
+### 3. Search for available stubs, then install.
+
+```shell
+micropy stubs search
+```

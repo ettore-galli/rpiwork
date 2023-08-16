@@ -32,6 +32,8 @@ micropy stubs create /dev/cu.usbmodem1101 # Solo prima volta che si usa un dispo
 micropy stubs create $(ls -d -1 /dev/*  | grep cu.usb)
 ```
 
+<https://lemariva.com/blog/2019/08/micropython-vsc-ide-intellisense>
+
 ### Steps - dev
 
 <https://micropy-cli.readthedocs.io/en/latest/base.html#creating-a-project>
