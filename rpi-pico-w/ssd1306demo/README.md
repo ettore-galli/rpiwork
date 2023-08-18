@@ -9,3 +9,7 @@
 ## Driver
 
 <https://github.com/stlehmann/micropython-ssd1306/blob/master/ssd1306.py>
+
+## Official Driver from micropy sources
+
+<https://github.com/micropython/micropython-lib/blob/master/micropython/drivers/display/ssd1306/ssd1306.py>
