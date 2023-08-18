@@ -121,7 +121,7 @@ def dynamic_demo(display):
         draw_bar(
             display=display, start_x=LEFT, start_y=50, height=7, length=rect_w, color=1
         )
-        time.sleep(0.001)
+        time.sleep(0.02)
         n += 1
 
 
