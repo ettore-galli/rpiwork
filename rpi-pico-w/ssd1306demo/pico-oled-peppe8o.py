@@ -23,7 +23,7 @@
 # Version: 1.0
 
 from machine import Pin, I2C
-from ssd1306 import ssd1306
+from ssd1306_official import ssd1306
 
 # setup the I2C communication
 i2c = I2C(0, sda=Pin(16), scl=Pin(17))
@@ -31,9 +31,9 @@ display = ssd1306.SSD1306_I2C(128, 64, i2c)
 
 
 # The following part changes according to what you want to display
-display.text('Hello,', 0, 0)
-display.text('peppe8o.com', 0, 16)
-display.text('readers!', 0, 32)
+display.text("Hello,", 0, 0)
+display.text("peppe8o.com", 0, 16)
+display.text("readers!", 0, 32)
 
 # The following line sends what to show to the display
 display.show()
