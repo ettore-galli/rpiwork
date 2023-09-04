@@ -49,7 +49,7 @@ func main() {
 	display.ClearBuffer()
 	display.ClearDisplay()
 
-	err := display.SetBuffer(ExampleImage)
+	err := display.SetBuffer(FotoEttore)
 	if err != nil {
 		println(err)
 	}
