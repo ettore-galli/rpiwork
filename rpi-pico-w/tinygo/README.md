@@ -42,8 +42,12 @@ Display
 Display Driver
 <https://github.com/tinygo-org/drivers/blob/release/ssd1306/ssd1306.go>
 
+```bash
+go get tinygo.org/x/drivers    
+```
+
 ## Flash
 
 ```bash
-tinygo flash -target=pico main.go
+CMD + Shift + P --> Tiny GoTarget --> pico
 ```
