@@ -51,3 +51,12 @@ go get tinygo.org/x/drivers
 ```bash
 CMD + Shift + P --> Tiny GoTarget --> pico
 ```
+
+## Mixed Commands
+
+```bash
+tinygo build -target=pico .
+tinygo flash -target=pico .
+
+
+```
