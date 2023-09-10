@@ -4,6 +4,7 @@ import (
 	"machine"
 	"sync"
 	"time"
+	"blinky/imgbuffer"
 
 	"tinygo.org/x/drivers/ssd1306"
 )
@@ -49,7 +50,8 @@ func main() {
 	display.ClearBuffer()
 	display.ClearDisplay()
 
-	err := display.SetBuffer(FotoEttore)
+	// err := display.SetBuffer(FotoEttore)
+	err := display.SetBuffer(imgbuffer.ToImageBuffer(ExampleBuffer, 128))
 	if err != nil {
 		println(err)
 	}
