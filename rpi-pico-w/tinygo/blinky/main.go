@@ -51,14 +51,7 @@ func writeValueOnDisplay(display ssd1306.Device, value uint16) {
 	writeBufferOnDisplay(display, imgBuffer)
 }
 
-func main() {
-	var mainWg sync.WaitGroup
-	mainWg.Add(1)
-
-	var samplingDelayMs float64 = 1
-	led := machine.Pin(0)
-	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
-
+func initializeADCSensor() machine.ADC {
 	var sensor = machine.ADC{
 		Pin: machine.ADC0,
 	}
@@ -67,6 +60,10 @@ func main() {
 	adcCfg := machine.ADCConfig{}
 	sensor.Configure(adcCfg)
 
+	return sensor
+}
+
+func initializeSsd1306Display() ssd1306.Device {
 	machine.I2C1.Configure(machine.I2CConfig{Frequency: 400 * machine.KHz})
 	display := ssd1306.NewI2C(machine.I2C1)
 	display.Configure(ssd1306.Config{Width: 128, Height: 64, Address: ssd1306.Address_128_32, VccState: ssd1306.SWITCHCAPVCC})
@@ -74,15 +71,21 @@ func main() {
 	display.ClearBuffer()
 	display.ClearDisplay()
 
-	// // err := display.SetBuffer(FotoEttore)
-	// imgBuffer := imgbuffer.ToSSD1306ImageBuffer(BlockBuffer)
-	// println(imgBuffer)
-	// err := display.SetBuffer(BlockBuffer)
-	// if err != nil {
-	// 	println(err)
-	// }
+	return display
+}
 
-	// display.Display()
+func main() {
+	var mainWg sync.WaitGroup
+	mainWg.Add(1)
+
+	var samplingDelayMs float64 = 1
+
+	led := machine.Pin(0)
+	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
+
+	var sensor machine.ADC = initializeADCSensor()
+
+	var display ssd1306.Device = initializeSsd1306Display()
 
 	valueCallback := func(value uint16) {
 		writeValueOnDisplay(display, value)
