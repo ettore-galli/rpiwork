@@ -1,5 +1,10 @@
 package imgbuffer
 
+/**
+https://mischianti.org/2021/07/14/ssd1306-oled-display-draw-images-splash-and-animations-2/
+https://lastminuteengineers.com/oled-display-arduino-tutorial/?utm_content=cmp-true
+*/
+
 func ToImageBuffer(imageMap []byte, width int16) []byte {
 
 	buffer := make([]byte, len(imageMap))

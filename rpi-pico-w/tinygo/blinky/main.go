@@ -26,12 +26,32 @@ func AdcLoop(sensor machine.ADC, samplingDelayMs float64, valueCallback func(uin
 	}
 }
 
+func IAmAliveLoop() {
+	for {
+		println("I am alive...")
+		time.Sleep(time.Millisecond * 1000)
+	}
+}
+
 func createImageBufferFromValue(value uint16) []byte {
 	const BufferLength int = 1024
+	const Pages int = 8
+	const PageLengthBytes int = 128
+
 	buffer := make([]byte, BufferLength)
-	for i := 0; i < BufferLength; i++ {
-		buffer[i] = byte(value >> 8)
+
+	barValue := byte(value >> 9) // 0-65535 --> 0-127
+	for page := 0; page < Pages; page++ {
+		for i := 0; i < PageLengthBytes; i++ {
+			bufferPosition := page*PageLengthBytes + i
+			if i < int(barValue) {
+				buffer[bufferPosition] = 0x00
+			} else {
+				buffer[bufferPosition] = 0xff
+			}
+		}
 	}
+
 	return buffer
 }
 
@@ -47,7 +67,6 @@ func writeBufferOnDisplay(display ssd1306.Device, imgBuffer []byte) {
 
 func writeValueOnDisplay(display ssd1306.Device, value uint16) {
 	imgBuffer := createImageBufferFromValue(value)
-
 	writeBufferOnDisplay(display, imgBuffer)
 }
 
@@ -75,6 +94,7 @@ func initializeSsd1306Display() ssd1306.Device {
 }
 
 func main() {
+
 	var mainWg sync.WaitGroup
 	mainWg.Add(1)
 
@@ -95,6 +115,8 @@ func main() {
 
 	// var delayMs float64 = 300
 	// go LedLoop(led, delayMs)
+
+	go IAmAliveLoop()
 
 	mainWg.Wait()
 
