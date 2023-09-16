@@ -7,8 +7,9 @@ func ToImageBuffer(imageMap []byte, width int16) []byte {
 
 	for index, imageByte := range imageMap {
 		for i := int16(0); i < 8; i++ {
-			mask := byte(1 << (7 - i))
-			imageBits := ((mask & imageByte) >> (7 - i)) << (7 - index%8)
+			bitshift := i
+			mask := byte(1 << bitshift)
+			imageBits := ((mask & imageByte) >> bitshift) << (7 - index%8)
 			bytesBufferPos := int16(index)/8 + i*wBytes
 			buffer[bytesBufferPos] |= imageBits
 		}

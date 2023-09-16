@@ -1,10 +1,10 @@
 package main
 
 import (
+	"blinky/imgbuffer"
 	"machine"
 	"sync"
 	"time"
-	"blinky/imgbuffer"
 
 	"tinygo.org/x/drivers/ssd1306"
 )
@@ -22,7 +22,8 @@ func AdcLoop(sensor machine.ADC, samplingDelayMs float64) {
 	var val uint16
 	for {
 		val = sensor.Get()
-		println((val))
+		_ = val
+		//println((val))
 		time.Sleep(time.Millisecond * time.Duration(samplingDelayMs))
 	}
 }
@@ -51,7 +52,9 @@ func main() {
 	display.ClearDisplay()
 
 	// err := display.SetBuffer(FotoEttore)
-	err := display.SetBuffer(imgbuffer.ToImageBuffer(ExampleBuffer, 128))
+	imgBuffer := imgbuffer.ToSSD1306ImageBuffer(BlockBuffer)
+	println(imgBuffer)
+	err := display.SetBuffer(BlockBuffer)
 	if err != nil {
 		println(err)
 	}
