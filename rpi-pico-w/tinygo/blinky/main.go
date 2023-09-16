@@ -1,7 +1,6 @@
 package main
 
 import (
-	"blinky/imgbuffer"
 	"machine"
 	"sync"
 	"time"
@@ -18,20 +17,44 @@ func LedLoop(led machine.Pin, delayMs float64) {
 	}
 }
 
-func AdcLoop(sensor machine.ADC, samplingDelayMs float64) {
+func AdcLoop(sensor machine.ADC, samplingDelayMs float64, valueCallback func(uint16)) {
 	var val uint16
 	for {
 		val = sensor.Get()
-		_ = val
-		//println((val))
+		valueCallback(val)
 		time.Sleep(time.Millisecond * time.Duration(samplingDelayMs))
 	}
+}
+
+func createImageBufferFromValue(value uint16) []byte {
+	const BufferLength int = 1024
+	buffer := make([]byte, BufferLength)
+	for i := 0; i < BufferLength; i++ {
+		buffer[i] = byte(value >> 8)
+	}
+	return buffer
+}
+
+func writeBufferOnDisplay(display ssd1306.Device, imgBuffer []byte) {
+
+	err := display.SetBuffer(imgBuffer)
+	if err != nil {
+		println(err)
+	}
+
+	display.Display()
+}
+
+func writeValueOnDisplay(display ssd1306.Device, value uint16) {
+	imgBuffer := createImageBufferFromValue(value)
+
+	writeBufferOnDisplay(display, imgBuffer)
 }
 
 func main() {
 	var mainWg sync.WaitGroup
 	mainWg.Add(1)
-	var delayMs float64 = 300
+
 	var samplingDelayMs float64 = 1
 	led := machine.Pin(0)
 	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
@@ -51,18 +74,24 @@ func main() {
 	display.ClearBuffer()
 	display.ClearDisplay()
 
-	// err := display.SetBuffer(FotoEttore)
-	imgBuffer := imgbuffer.ToSSD1306ImageBuffer(BlockBuffer)
-	println(imgBuffer)
-	err := display.SetBuffer(BlockBuffer)
-	if err != nil {
-		println(err)
+	// // err := display.SetBuffer(FotoEttore)
+	// imgBuffer := imgbuffer.ToSSD1306ImageBuffer(BlockBuffer)
+	// println(imgBuffer)
+	// err := display.SetBuffer(BlockBuffer)
+	// if err != nil {
+	// 	println(err)
+	// }
+
+	// display.Display()
+
+	valueCallback := func(value uint16) {
+		writeValueOnDisplay(display, value)
 	}
 
-	display.Display()
+	go AdcLoop(sensor, samplingDelayMs, valueCallback)
 
-	go AdcLoop(sensor, samplingDelayMs)
-	go LedLoop(led, delayMs)
+	// var delayMs float64 = 300
+	// go LedLoop(led, delayMs)
 
 	mainWg.Wait()
 
